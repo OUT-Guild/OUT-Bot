@@ -1,0 +1,300 @@
+{
+  "cogs": {
+    "cog": "cog_manager",
+    "required_roles": ["Bot Developer", "*"],
+    "cooldown_rate": 0,
+    "cooldown_per": 0,
+    "aliases": [],
+    "usage": "!cogs",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "start_cog": {
+    "cog": "cog_manager",
+    "required_roles": ["Bot Developer", "*"],
+    "cooldown_rate": 0,
+    "cooldown_per": 0,
+    "aliases": ["startCog", "enable_cog", "enableCog"],
+    "usage": "!start_cog (Cog Name)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "stop_cog": {
+    "cog": "cog_manager",
+    "required_roles": ["Bot Developer", "*"],
+    "cooldown_rate": 0,
+    "cooldown_per": 0,
+    "aliases": ["stopCog", "disable_cog", "disableCog"],
+    "usage": "!stop_cog (Cog Name)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "help": {
+    "cog": "cog_manager",
+    "required_roles": ["@everyone"],
+    "cooldown_rate": 45,
+    "cooldown_per": 3,
+    "aliases": [],
+    "usage": "!help [Cog]",
+    "description": "",
+    "signature": "StarbuckBarista"
+  },"ping": {
+    "cog": "cog_manager",
+    "required_roles": ["Bot Developer", "*"],
+    "cooldown_rate": 0,
+    "cooldown_per": 0,
+    "aliases": ["ms", "delay", "latency"],
+    "usage": "!ping",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "eval": {
+    "cog": "cog_manager",
+    "required_roles": ["Bot Developer", "*"],
+    "cooldown_rate": 0,
+    "cooldown_per": 0,
+    "aliases": ["exec"],
+    "usage": "!eval (Code)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "clear": {
+    "cog": "moderation",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 15,
+    "cooldown_per": 3,
+    "aliases": ["purge", "delete"],
+    "usage": "!clear (Number)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "punish": {
+    "cog": "moderation",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 15,
+    "cooldown_per": 3,
+    "aliases": ["warn"],
+    "usage": "!punish (@User) [Reason]",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "pardon": {
+    "cog": "moderation",
+    "required_roles": ["Head Council", "*"],
+    "cooldown_rate": 15,
+    "cooldown_per": 3,
+    "aliases": ["unwarn"],
+    "usage": "!pardon (@User) (Warning ID) [Reason]",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "warning": {
+    "cog": "moderation",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 45,
+    "cooldown_per": 3,
+    "aliases": [],
+    "usage": "!warning (Warning ID)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "warnings": {
+    "cog": "moderation",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 45,
+    "cooldown_per": 3,
+    "aliases": ["history"],
+    "usage": "!warnings (@Member)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "link": {
+    "cog": "welcomes",
+    "required_roles": ["@everyone"],
+    "cooldown_rate": 300,
+    "cooldown_per": 2,
+    "aliases": ["verify"],
+    "usage": "!link (Username)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "admin:link": {
+    "cog": "welcomes",
+    "required_roles": ["Head Council", "*"],
+    "cooldown_rate": 300,
+    "cooldown_per": 5,
+    "aliases": ["admin:verify"],
+    "usage": "!admin:link (@Member) (Username)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "apply": {
+    "cog": "applications",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 300,
+    "cooldown_per": 3,
+    "aliases": [],
+    "usage": "!apply",
+    "description": "",
+    "signature": "StarbuckBarista & xLectroLiqhtnin"
+  }, "application": {
+    "cog": "applications",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": [],
+    "usage": "!application (Application ID)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "applications": {
+    "cog": "applications",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": [],
+    "usage": "!applications",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "accept": {
+    "cog": "applications",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": [],
+    "usage": "!accept (Application ID)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "reject": {
+    "cog": "applications",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": [],
+    "usage": "!reject (Application ID)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "cancel": {
+    "cog": "applications",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": [],
+    "usage": "!cancel (Application ID)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "profile": {
+    "cog": "coins",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 45,
+    "cooldown_per": 3,
+    "aliases": [],
+    "usage": "!profile [@Member]",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "shop": {
+    "cog": "coins",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 45,
+    "cooldown_per": 3,
+    "aliases": [],
+    "usage": "!shop [Category]",
+    "description": "",
+    "signature": "StarbuckBarista & xLectroLiqhtnin"
+  }, "support": {
+    "cog": "coins",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 60,
+    "cooldown_per": 1,
+    "aliases": [],
+    "usage": "!support (@Member)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "emote": {
+    "cog": "coins",
+    "required_roles": ["✧Nitro Booster✧", "OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 1,
+    "aliases": [],
+    "usage": "!emote",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "giftcoins": {
+    "cog": "coins",
+    "required_roles": ["✧Nitro Booster✧", "OUT Staff", "*"],
+    "cooldown_rate": 45,
+    "cooldown_per": 3,
+    "aliases": [],
+    "usage": "!giftcoins (@Member) (Amount)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "outcoins": {
+    "cog": "coins",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": ["oc"],
+    "usage": "!outcoins (Add/Subtract) (Amount) (@Member[s])",
+    "description": "",
+    "signature": "StarbuckBarista & xLectroLiqhtnin"
+  }, "outcoins_top": {
+    "cog": "coins",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 45,
+    "cooldown_per": 3,
+    "aliases": ["octop"],
+    "usage": "!outcoinstop",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "events": {
+    "cog": "badges",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": [],
+    "usage": "!events (Add/Subtract) (Amount) (@Member[s])",
+    "description": "",
+    "signature": "StarbuckBarista"
+  },"guildmember": {
+    "cog": "guild",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 300,
+    "cooldown_per": 2,
+    "aliases": ["guild_member"],
+    "usage": "!guildmember",
+    "description": "",
+    "signature": "StarbuckBarista"
+  },"inactive": {
+    "cog": "guild",
+    "required_roles": ["Guild Member"],
+    "cooldown_rate": 300,
+    "cooldown_per": 1,
+    "aliases": [],
+    "usage": "!inactive [Reason]",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "admin:inactive": {
+    "cog": "guild",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 300,
+    "cooldown_per": 3,
+    "aliases": [],
+    "usage": "!admin:inactive (@Member) [Reason]",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "restartOUTBOT": {
+    "cog": "guild",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 1,
+    "aliases": ["outbot"],
+    "usage": "!restartOUTBOT",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "launchcat": {
+    "cog": "miscellaneous",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 300,
+    "cooldown_per": 1,
+    "aliases": ["launch", "explode", "self-destruct"],
+    "usage": "!launchcat",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }, "birthday": {
+    "cog": "miscellaneous",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 300,
+    "cooldown_per": 3,
+    "aliases": ["bday", "b-day"],
+    "usage": "!birthday (@Member) (Member Name) (#Channel)",
+    "description": "",
+    "signature": "StarbuckBarista"
+  }
+}

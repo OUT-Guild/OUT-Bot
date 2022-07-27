@@ -6,7 +6,7 @@
     "cooldown_per": 0,
     "aliases": [],
     "usage": "!cogs",
-    "description": "",
+    "description": "Opens the list of cogs.",
     "signature": "StarbuckBarista"
   }, "start_cog": {
     "cog": "cog_manager",
@@ -15,7 +15,7 @@
     "cooldown_per": 0,
     "aliases": ["startCog", "enable_cog", "enableCog"],
     "usage": "!start_cog (Cog Name)",
-    "description": "",
+    "description": "Starts a cog.",
     "signature": "StarbuckBarista"
   }, "stop_cog": {
     "cog": "cog_manager",
@@ -24,7 +24,7 @@
     "cooldown_per": 0,
     "aliases": ["stopCog", "disable_cog", "disableCog"],
     "usage": "!stop_cog (Cog Name)",
-    "description": "",
+    "description": "Stops a cog.",
     "signature": "StarbuckBarista"
   }, "help": {
     "cog": "cog_manager",
@@ -33,7 +33,7 @@
     "cooldown_per": 3,
     "aliases": [],
     "usage": "!help [Cog]",
-    "description": "",
+    "description": "Shows information on commands.",
     "signature": "StarbuckBarista"
   },"ping": {
     "cog": "cog_manager",
@@ -42,7 +42,7 @@
     "cooldown_per": 0,
     "aliases": ["ms", "delay", "latency"],
     "usage": "!ping",
-    "description": "",
+    "description": "Shows the bot's ping on Discord.",
     "signature": "StarbuckBarista"
   }, "eval": {
     "cog": "cog_manager",
@@ -51,7 +51,7 @@
     "cooldown_per": 0,
     "aliases": ["exec"],
     "usage": "!eval (Code)",
-    "description": "",
+    "description": "Used to manually run code.",
     "signature": "StarbuckBarista"
   }, "clear": {
     "cog": "moderation",
@@ -60,7 +60,7 @@
     "cooldown_per": 3,
     "aliases": ["purge", "delete"],
     "usage": "!clear (Number)",
-    "description": "",
+    "description": "Deletes previous messages from a channel.",
     "signature": "StarbuckBarista"
   }, "punish": {
     "cog": "moderation",
@@ -69,7 +69,7 @@
     "cooldown_per": 3,
     "aliases": ["warn"],
     "usage": "!punish (@User) [Reason]",
-    "description": "",
+    "description": "Warns users for breaking the rules.",
     "signature": "StarbuckBarista"
   }, "pardon": {
     "cog": "moderation",
@@ -78,7 +78,7 @@
     "cooldown_per": 3,
     "aliases": ["unwarn"],
     "usage": "!pardon (@User) (Warning ID) [Reason]",
-    "description": "",
+    "description": "Excuses users from their warnings.",
     "signature": "StarbuckBarista"
   }, "warning": {
     "cog": "moderation",
@@ -87,7 +87,7 @@
     "cooldown_per": 3,
     "aliases": [],
     "usage": "!warning (Warning ID)",
-    "description": "",
+    "description": "Shows information on a warning.",
     "signature": "StarbuckBarista"
   }, "warnings": {
     "cog": "moderation",
@@ -96,7 +96,7 @@
     "cooldown_per": 3,
     "aliases": ["history"],
     "usage": "!warnings (@Member)",
-    "description": "",
+    "description": "Shows information on all of a Discord Member's warnings.",
     "signature": "StarbuckBarista"
   }, "link": {
     "cog": "welcomes",
@@ -105,7 +105,7 @@
     "cooldown_per": 2,
     "aliases": ["verify"],
     "usage": "!link (Username)",
-    "description": "",
+    "description": "Links your Minecraft Account to your Discord.",
     "signature": "StarbuckBarista"
   }, "admin:link": {
     "cog": "welcomes",
@@ -114,7 +114,7 @@
     "cooldown_per": 5,
     "aliases": ["admin:verify"],
     "usage": "!admin:link (@Member) (Username)",
-    "description": "",
+    "description": "Forcefully likes a Minecraft Account to a Discord.",
     "signature": "StarbuckBarista"
   }, "apply": {
     "cog": "applications",
@@ -123,7 +123,7 @@
     "cooldown_per": 3,
     "aliases": [],
     "usage": "!apply",
-    "description": "",
+    "description": "Sends an application to join the OUT Guild.",
     "signature": "StarbuckBarista & xLectroLiqhtnin"
   }, "application": {
     "cog": "applications",
@@ -132,7 +132,7 @@
     "cooldown_per": 2,
     "aliases": [],
     "usage": "!application (Application ID)",
-    "description": "",
+    "description": "Shows information on an application.",
     "signature": "StarbuckBarista"
   }, "applications": {
     "cog": "applications",
@@ -141,7 +141,7 @@
     "cooldown_per": 2,
     "aliases": [],
     "usage": "!applications",
-    "description": "",
+    "description": "Shows information on all applications.",
     "signature": "StarbuckBarista"
   }, "accept": {
     "cog": "applications",
@@ -150,7 +150,7 @@
     "cooldown_per": 2,
     "aliases": [],
     "usage": "!accept (Application ID)",
-    "description": "",
+    "description": "Accepts an application into the OUT Guild.",
     "signature": "StarbuckBarista"
   }, "reject": {
     "cog": "applications",
@@ -159,7 +159,7 @@
     "cooldown_per": 2,
     "aliases": [],
     "usage": "!reject (Application ID)",
-    "description": "",
+    "description": "Rejects an application into the OUT Guild.",
     "signature": "StarbuckBarista"
   }, "cancel": {
     "cog": "applications",
@@ -168,7 +168,7 @@
     "cooldown_per": 2,
     "aliases": [],
     "usage": "!cancel (Application ID)",
-    "description": "",
+    "description": "Cancels an application into the OUT Guild.",
     "signature": "StarbuckBarista"
   }, "profile": {
     "cog": "coins",
@@ -177,7 +177,7 @@
     "cooldown_per": 3,
     "aliases": [],
     "usage": "!profile [@Member]",
-    "description": "",
+    "description": "Shows information on an OUT Profile.",
     "signature": "StarbuckBarista"
   }, "shop": {
     "cog": "coins",
@@ -186,7 +186,7 @@
     "cooldown_per": 3,
     "aliases": [],
     "usage": "!shop [Category]",
-    "description": "",
+    "description": "Shows the OUT Coin Shop.",
     "signature": "StarbuckBarista & xLectroLiqhtnin"
   }, "support": {
     "cog": "coins",
@@ -195,7 +195,7 @@
     "cooldown_per": 1,
     "aliases": [],
     "usage": "!support (@Member)",
-    "description": "",
+    "description": "Supports another Discord Member; they will receive a small percentage of your spendings.",
     "signature": "StarbuckBarista"
   }, "emote": {
     "cog": "coins",
@@ -204,7 +204,7 @@
     "cooldown_per": 1,
     "aliases": [],
     "usage": "!emote",
-    "description": "",
+    "description": "Saves your Minecraft Head as an emote.",
     "signature": "StarbuckBarista"
   }, "giftcoins": {
     "cog": "coins",
@@ -213,7 +213,7 @@
     "cooldown_per": 3,
     "aliases": [],
     "usage": "!giftcoins (@Member) (Amount)",
-    "description": "",
+    "description": "Gifts OUT Coins to another Discord Member.",
     "signature": "StarbuckBarista"
   }, "outcoins": {
     "cog": "coins",
@@ -222,7 +222,7 @@
     "cooldown_per": 2,
     "aliases": ["oc"],
     "usage": "!outcoins (Add/Subtract) (Amount) (@Member[s])",
-    "description": "",
+    "description": "Manages OUT Coins of Discord Members.",
     "signature": "StarbuckBarista & xLectroLiqhtnin"
   }, "outcoins_top": {
     "cog": "coins",
@@ -231,7 +231,7 @@
     "cooldown_per": 3,
     "aliases": ["octop"],
     "usage": "!outcoinstop",
-    "description": "",
+    "description": "Shows the OUT Coin Leaderboard.",
     "signature": "StarbuckBarista"
   }, "events": {
     "cog": "badges",
@@ -240,7 +240,7 @@
     "cooldown_per": 2,
     "aliases": [],
     "usage": "!events (Add/Subtract) (Amount) (@Member[s])",
-    "description": "",
+    "description": "Manages Events of Discord Members.",
     "signature": "StarbuckBarista"
   },"guildmember": {
     "cog": "guild",
@@ -249,7 +249,7 @@
     "cooldown_per": 2,
     "aliases": ["guild_member"],
     "usage": "!guildmember",
-    "description": "",
+    "description": "Verifies you as a guild member.",
     "signature": "StarbuckBarista"
   },"inactive": {
     "cog": "guild",
@@ -258,7 +258,7 @@
     "cooldown_per": 1,
     "aliases": [],
     "usage": "!inactive [Reason]",
-    "description": "",
+    "description": "Toggles you as inactive in the guild.",
     "signature": "StarbuckBarista"
   }, "admin:inactive": {
     "cog": "guild",
@@ -267,7 +267,7 @@
     "cooldown_per": 3,
     "aliases": [],
     "usage": "!admin:inactive (@Member) [Reason]",
-    "description": "",
+    "description": "Forcefully toggles a guild member as inactive.",
     "signature": "StarbuckBarista"
   }, "restartOUTBOT": {
     "cog": "guild",
@@ -276,7 +276,7 @@
     "cooldown_per": 1,
     "aliases": ["outbot"],
     "usage": "!restartOUTBOT",
-    "description": "",
+    "description": "Restarts OUTB- I mean... *VIBESxLectro*.",
     "signature": "StarbuckBarista"
   }, "launchcat": {
     "cog": "miscellaneous",
@@ -285,7 +285,7 @@
     "cooldown_per": 1,
     "aliases": ["launch", "explode", "self-destruct"],
     "usage": "!launchcat",
-    "description": "",
+    "description": "Summons the ancient and powerful Launch Cat.",
     "signature": "StarbuckBarista"
   }, "birthday": {
     "cog": "miscellaneous",
@@ -294,7 +294,7 @@
     "cooldown_per": 3,
     "aliases": ["bday", "b-day"],
     "usage": "!birthday (@Member) (Member Name) (#Channel)",
-    "description": "",
+    "description": "Celebrates a Discord Member's Birthday.",
     "signature": "StarbuckBarista"
   }
 }

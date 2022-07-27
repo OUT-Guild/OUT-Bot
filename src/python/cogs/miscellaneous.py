@@ -22,6 +22,15 @@ class Miscellaneous(commands.Cog):
             return
         elif isinstance(error, commands.MissingRole) or isinstance(error, commands.MissingAnyRole):
             return await ctx.reply("L")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            command = self.command_details[ctx.command.name]
+            command_embed = self.client.create_embed("OUT Help Page", "The command you just ran was used incorrectly.", config.embed_error_color)
+            command_embed.add_field(name=command["usage"],
+                                    value=f"Required Roles: `{', '.join(command['required_roles'])}`\nAliases: `{', '.join(command['aliases']) if len(command['aliases']) > 0 else 'None'}`",
+                                    inline=True)
+            command_embed.set_footer(text=f"Created by: {command['signature']}")
+
+            return await ctx.reply(embed=command_embed)
         elif isinstance(error, commands.CommandError):
             error_embed = self.client.create_embed("Command Raised Error", "The command you attempted to run produced an unexpected error, it will be closely analyzed by our staff.", config.embed_error_color)
             await ctx.reply(embed=error_embed)

@@ -239,8 +239,8 @@ class Coins(commands.Cog):
 
                 user_collection.update_one({"_id": ctx.author.id}, {"$inc": {"outcoins": -1 * shop_item["price"]}})
 
-                if user_collection["supporting"] is not None:
-                    user_collection.update_one({"_id": user_collection["supporting"]}, {"$inc": {"outcoins": shop_item["price"] * config.support_rate}})
+                if user_profile["supporting"] is not None:
+                    user_collection.update_one({"_id": user_profile["supporting"]}, {"$inc": {"outcoins": shop_item["price"] * config.support_rate}})
 
                 if item_type == "role":
                     role_id = shop_item["role_id"]

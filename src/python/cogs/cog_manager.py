@@ -188,7 +188,7 @@ class Cog_Manager(commands.Cog):
         while True:
             command = commands[command_index]
             command_embed = self.client.create_embed("OUT Help Page", command["description"], config.embed_info_color)
-            command_embed.add_field(name=command["usage"], value=f"Required Roles: `{', '.join(command['required_roles'])}`\nAliases: `{', '.join(command['aliases'])}`", inline=True)
+            command_embed.add_field(name=command["usage"], value=f"Required Roles: `{', '.join(command['required_roles'])}`\nAliases: `{', '.join(command['aliases']) if len(command['aliases']) > 0 else 'None'}`", inline=True)
             command_embed.set_footer(text=f"Created by: {command['signature']}")
 
             await help_message.edit(embed=command_embed)

@@ -237,7 +237,7 @@ class Coins(commands.Cog):
                     price_embed = self.client.create_embed("Invalid Item Purchase", "You are unable to purchase this item as your lack sufficient funds.", config.embed_error_color)
                     return await shop_message.edit(embed=price_embed)
 
-                user_collection.update_one({"_id": ctx.author.id}, {"inc": {"outcoins": -1 * shop_item["price"]}})
+                user_collection.update_one({"_id": ctx.author.id}, {"$inc": {"outcoins": -1 * shop_item["price"]}})
 
                 if user_collection["supporting"] is not None:
                     user_collection.update_one({"_id": user_collection["supporting"]}, {"$inc": {"outcoins": shop_item["price"] * config.support_rate}})

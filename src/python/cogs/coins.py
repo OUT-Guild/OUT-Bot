@@ -308,8 +308,8 @@ class Coins(commands.Cog):
                 purchased_embed.add_field(name="Item Purchased", value=shop_item["name"], inline=True)
                 purchased_embed.add_field(name="OUT Coins Spent", value=f"{shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>", inline=True)
 
-                if user_collection["supporting"] is not None:
-                    purchased_embed.set_footer(text=f"Supported: <@!{user_collection['supporting']}>")
+                if user_profile["supporting"] is not None:
+                    purchased_embed.set_footer(text=f"Supported: <@!{user_profile['supporting']}>")
 
                 return await shop_message.edit(embed=purchased_embed)
 

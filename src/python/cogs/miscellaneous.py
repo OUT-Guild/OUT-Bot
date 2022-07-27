@@ -18,7 +18,7 @@ class Miscellaneous(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if isinstance(error, TimeoutError):
+        if isinstance(error, TimeoutError) or isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.MissingRole) or isinstance(error, commands.MissingAnyRole):
             return await ctx.reply("L")

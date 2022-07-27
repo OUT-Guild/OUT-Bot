@@ -191,7 +191,7 @@ class Coins(commands.Cog):
                 item_preview = f"<:outemoji:{config.emoji_ids['out']}>"
 
             item_embed = self.client.create_embed("OUT Shop", shop_item["description"], config.embed_info_color)
-            item_embed.add_field(name=shop_item["name"], value=f"Price: {shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>)\n{item_preview}", inline=True)
+            item_embed.add_field(name=shop_item["name"], value=f"Price: {shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>\n{item_preview}", inline=True)
 
             if shop_item["type"] == "rank_badge_transaction":
                 rank_tier = 1

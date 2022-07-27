@@ -155,7 +155,7 @@ class Coins(commands.Cog):
             return await ctx.reply(embed=category_embed)
 
         category = category.lower()
-        if category not in [config.shop_categories]:
+        if category not in config.shop_categories:
             category_embed = self.client.create_embed("Invalid Shop Category", "There is no shop category by that name.", config.embed_error_color)
             return await ctx.reply(embed=category_embed)
 

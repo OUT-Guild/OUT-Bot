@@ -73,67 +73,47 @@ class Logs(commands.Cog):
         self.invitesBefore.append(await member.guild.vanity_invite())
 
     @commands.Cog.listener()
-    async def on_raw_message_delete(self, payload):
-        try:
-            guild = self.client.get_guild(payload.guild_id)
-            message = payload.cached_message
+    async def on_message_delete(self, message):
+        guild = message.guild
 
-            embed = discord.Embed(
-                title="Message Deleted",
-                color=discord.Color.red()
-            )
+        embed = discord.Embed(
+            title="Message Deleted",
+            color=discord.Color.red()
+        )
 
-            embed.add_field(name="Member", value=message.author.mention, inline=False)
-            embed.add_field(name="Channel", value=message.channel.mention, inline=False)
-            embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
+        embed.add_field(name="Member", value=message.author.mention, inline=False)
+        embed.add_field(name="Channel", value=message.channel.mention, inline=False)
+        embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
 
-            if len(message.content) > 0:
-                embed.add_field(name="Message", value=message.content, inline=False)
+        if len(message.content) > 0:
+            embed.add_field(name="Message", value=message.content, inline=False)
 
-            async for entry in guild.audit_logs(limit=1):
-                if entry.action == discord.AuditLogAction.message_delete and self.lastAuditID != entry.id:
-                    self.lastAuditID = entry.id
-                    embed.add_field(name="Deleter", value=entry.user.mention, inline=False)
-                else:
-                    embed.add_field(name="Deleter",
-                                    value=f"Either {message.author.mention} or {self.client.user.mention}",
-                                    inline=False)
+        async for entry in guild.audit_logs(limit=1):
+            if entry.action == discord.AuditLogAction.message_delete and self.lastAuditID != entry.id:
+                self.lastAuditID = entry.id
+                embed.add_field(name="Deleter", value=entry.user.mention, inline=False)
+            else:
+                embed.add_field(name="Deleter",
+                                value=f"Either {message.author.mention} or {self.client.user.mention}",
+                                inline=False)
 
-            for attachment in message.attachments:
-                embed.set_image(url=attachment.proxy_url)
-        except:
-            channel = self.client.get_channel(payload.channel_id)
-
-            embed = discord.Embed(
-                title="Message Deleted",
-                color=discord.Color.red()
-            )
-
-            embed.add_field(name="Member", value="Unable to Trace", inline=False)
-            embed.add_field(name="Channel", value=channel.mention, inline=False)
-            embed.add_field(name="Message", value="Unable to Trace", inline=False)
-
-            async for entry in guild.audit_logs(limit=1):
-                if entry.action == discord.AuditLogAction.message_delete and self.lastAuditID != entry.id:
-                    self.lastAuditID = entry.id
-                    embed.add_field(name="Deleter", value=entry.user.mention, inline=False)
-                else:
-                    embed.add_field(name="Deleter", value="Unable to Trace", inline=False)
+        for attachment in message.attachments:
+            embed.set_image(url=attachment.proxy_url)
 
         channel = self.client.get_channel(config.channel_ids["message_logs"])
         await channel.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_raw_bulk_message_delete(self, payload):
-        guild = self.client.get_guild(payload.guild_id)
-        channel = self.client.get_channel(payload.channel_id)
+    async def on_bulk_message_delete(self, messages):
+        guild = messages[0].guild
+        channel = messages[0].channel
 
         embed = discord.Embed(
             title="Bulk Messages Deleted",
             color=discord.Color.red()
         )
 
-        embed.add_field(name="Amount", value=len(payload.message_ids), inline=False)
+        embed.add_field(name="Amount", value=len(messages), inline=False)
         embed.add_field(name="Channel", value=channel.mention, inline=False)
 
         async for entry in guild.audit_logs(limit=1):
@@ -145,74 +125,41 @@ class Logs(commands.Cog):
 
         channel = self.client.get_channel(config.channel_ids["message_logs"])
         await channel.send(embed=embed)
-        runLoops = 0
 
-        try:
-            for cached_message in payload.cached_messages:
-                message = cached_message
-
-                embed = discord.Embed(
-                    title="Message Deleted | {} of {}".format(payload.cached_messages.index(cached_message) + 1,
-                                                              len(payload.cached_messages)),
-                    color=discord.Color.red()
-                )
-
-                embed.add_field(name="Member", value=message.author.mention, inline=False)
-                embed.add_field(name="Message", value=message.content, inline=False)
-                embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
-
-                for attachment in message.attachments:
-                    embed.add_field(name="Attachment #{}".format(message.attachments.index(attachment) + 1),
-                                    value=attachment.url, inline=False)
-
-                channel = self.client.get_channel(config.channel_ids["message_logs"])
-                await channel.send(embed=embed)
-
-                runLoops += 1
-        except:
-            for message in range(len(payload.message_ids)):
-                embed = discord.Embed(
-                    title="Message Deleted | {} of {}".format(message + runLoops + 1, len(payload.message_ids)),
-                    color=discord.Color.red()
-                )
-
-                embed.add_field(name="Member", value="Unable to Trace", inline=False)
-                embed.add_field(name="Message", value="Unable to Trace", inline=False)
-
-                channel = self.client.get_channel(config.channel_ids["message_logs"])
-                await channel.send(embed=embed)
-
-    @commands.Cog.listener()
-    async def on_raw_message_edit(self, payload):
-        try:
-            message = payload.cached_message
-            channel = self.client.get_channel(payload.channel_id)
-
-            if message.author.bot:
-                return
-
+        for index, message in enumerate(messages):
             embed = discord.Embed(
-                title="Message Edited",
-                color=discord.Color.orange()
+                title=f"Message Deleted | {index + 1} of {len(messages)}",
+                color=discord.Color.red()
             )
 
             embed.add_field(name="Member", value=message.author.mention, inline=False)
-            embed.add_field(name="Channel", value=channel.mention, inline=False)
-            embed.add_field(name="Before", value=message.content, inline=False)
-            embed.add_field(name="After", value=payload.data["content"], inline=False)
+            embed.add_field(name="Message", value=message.content, inline=False)
             embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
-        except:
-            channel = self.client.get_channel(payload.channel_id)
 
-            embed = discord.Embed(
-                title="Message Edited",
-                color=discord.Color.orange()
-            )
+            for attachment in message.attachments:
+                embed.add_field(name="Attachment #{}".format(message.attachments.index(attachment) + 1),
+                                value=attachment.url, inline=False)
 
-            embed.add_field(name="Member", value="Unable to Trace", inline=False)
-            embed.add_field(name="Channel", value=channel.mention, inline=False)
-            embed.add_field(name="Before", value="Unable to Trace", inline=False)
-            embed.add_field(name="After", value="Unable to Trace", inline=False)
+            channel = self.client.get_channel(config.channel_ids["message_logs"])
+            await channel.send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        channel = before.channel
+
+        if before.author.bot:
+            return
+
+        embed = discord.Embed(
+            title="Message Edited",
+            color=discord.Color.orange()
+        )
+
+        embed.add_field(name="Member", value=before.author.mention, inline=False)
+        embed.add_field(name="Channel", value=channel.mention, inline=False)
+        embed.add_field(name="Before", value=before.content, inline=False)
+        embed.add_field(name="After", value=after.content, inline=False)
+        embed.set_author(name=before.author.name, icon_url=before.author.avatar_url)
 
         channel = self.client.get_channel(config.channel_ids["message_logs"])
         await channel.send(embed=embed)

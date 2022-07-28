@@ -144,36 +144,22 @@ class Logs(commands.Cog):
             await channel.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_raw_message_edit(self, payload):
-        try:
-            message = payload.cached_message
-            channel = self.client.get_channel(payload.channel_id)
+    async def on_message_edit(self, before, after):
+        channel = before.channel
 
-            if message.author.bot:
-                return
+        if before.author.bot:
+            return
 
-            embed = discord.Embed(
-                title="Message Edited",
-                color=discord.Color.orange()
-            )
+        embed = discord.Embed(
+            title="Message Edited",
+            color=discord.Color.orange()
+        )
 
-            embed.add_field(name="Member", value=message.author.mention, inline=False)
-            embed.add_field(name="Channel", value=channel.mention, inline=False)
-            embed.add_field(name="Before", value=message.content, inline=False)
-            embed.add_field(name="After", value=payload.data["content"], inline=False)
-            embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
-        except:
-            channel = self.client.get_channel(payload.channel_id)
-
-            embed = discord.Embed(
-                title="Message Edited",
-                color=discord.Color.orange()
-            )
-
-            embed.add_field(name="Member", value="Unable to Trace", inline=False)
-            embed.add_field(name="Channel", value=channel.mention, inline=False)
-            embed.add_field(name="Before", value="Unable to Trace", inline=False)
-            embed.add_field(name="After", value="Unable to Trace", inline=False)
+        embed.add_field(name="Member", value=before.author.mention, inline=False)
+        embed.add_field(name="Channel", value=channel.mention, inline=False)
+        embed.add_field(name="Before", value=before.content, inline=False)
+        embed.add_field(name="After", value=after.content, inline=False)
+        embed.set_author(name=before.author.name, icon_url=before.author.avatar_url)
 
         channel = self.client.get_channel(config.channel_ids["message_logs"])
         await channel.send(embed=embed)

@@ -11,6 +11,10 @@ class Logs(commands.Cog):
         self.invitesBefore = None
         self.lastAuditID = None
 
+        guild = await self.client.fetch_guild(503560012581568514)
+        async for entry in guild.audit_logs(limit=1):
+            self.lastAuditID = entry.id
+
     @commands.Cog.listener()
     async def on_ready(self):
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="-Starbuck"))

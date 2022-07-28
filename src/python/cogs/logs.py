@@ -11,16 +11,15 @@ class Logs(commands.Cog):
         self.invitesBefore = None
         self.lastAuditID = None
 
-        guild = await self.client.fetch_guild(503560012581568514)
-        async for entry in guild.audit_logs(limit=1):
-            self.lastAuditID = entry.id
-
     @commands.Cog.listener()
     async def on_ready(self):
         await self.client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="-Starbuck"))
         guild = self.client.get_guild(503560012581568514)
         self.invitesBefore = await guild.invites()
         self.invitesBefore.append(await guild.vanity_invite())
+
+        async for entry in guild.audit_logs(limit=1):
+            self.lastAuditID = entry.id
 
     @commands.Cog.listener()
     async def on_member_join(self, member):

@@ -51,7 +51,7 @@ class Logs(commands.Cog):
         embed.add_field(name="Member", value=member.mention, inline=False)
         embed.add_field(name="Invite Code", value=code, inline=False)
         embed.add_field(name="Inviter", value=inviter, inline=False)
-        embed.set_author(name=member.name, icon_url=member.avatar_url)
+        embed.set_author(name=member.name, icon_url=member.avatar.url)
 
         channel = self.client.get_channel(config.channel_ids["join_leave_logs"])
         await channel.send(embed=embed)
@@ -64,7 +64,7 @@ class Logs(commands.Cog):
         )
 
         embed.add_field(name="Member", value=member.mention, inline=False)
-        embed.set_author(name=member.name, icon_url=member.avatar_url)
+        embed.set_author(name=member.name, icon_url=member.avatar.url)
 
         channel = self.client.get_channel(config.channel_ids["join_leave_logs"])
         await channel.send(embed=embed)
@@ -83,9 +83,15 @@ class Logs(commands.Cog):
                 color=discord.Color.red()
             )
 
+<<<<<<< Updated upstream
             embed.add_field(name="Member", value=message.author.mention, inline=False)
             embed.add_field(name="Channel", value=message.channel.mention, inline=False)
             embed.set_author(name=message.author.name, icon_url=message.author.avatar_url)
+=======
+        embed.add_field(name="Member", value=message.author.mention, inline=False)
+        embed.add_field(name="Channel", value=message.channel.mention, inline=False)
+        embed.set_author(name=message.author.name, icon_url=message.author.avatar.url)
+>>>>>>> Stashed changes
 
             if len(message.content) > 0:
                 embed.add_field(name="Message", value=message.content, inline=False)
@@ -151,11 +157,17 @@ class Logs(commands.Cog):
             for cached_message in payload.cached_messages:
                 message = cached_message
 
+<<<<<<< Updated upstream
                 embed = discord.Embed(
                     title="Message Deleted | {} of {}".format(payload.cached_messages.index(cached_message) + 1,
                                                               len(payload.cached_messages)),
                     color=discord.Color.red()
                 )
+=======
+            embed.add_field(name="Member", value=message.author.mention, inline=False)
+            embed.add_field(name="Message", value=message.content, inline=False)
+            embed.set_author(name=message.author.name, icon_url=message.author.avatar.url)
+>>>>>>> Stashed changes
 
                 embed.add_field(name="Member", value=message.author.mention, inline=False)
                 embed.add_field(name="Message", value=message.content, inline=False)
@@ -196,6 +208,7 @@ class Logs(commands.Cog):
                 color=discord.Color.orange()
             )
 
+<<<<<<< Updated upstream
             embed.add_field(name="Member", value=message.author.mention, inline=False)
             embed.add_field(name="Channel", value=channel.mention, inline=False)
             embed.add_field(name="Before", value=message.content, inline=False)
@@ -213,6 +226,13 @@ class Logs(commands.Cog):
             embed.add_field(name="Channel", value=channel.mention, inline=False)
             embed.add_field(name="Before", value="Unable to Trace", inline=False)
             embed.add_field(name="After", value="Unable to Trace", inline=False)
+=======
+        embed.add_field(name="Member", value=before.author.mention, inline=False)
+        embed.add_field(name="Channel", value=channel.mention, inline=False)
+        embed.add_field(name="Before", value=before.content, inline=False)
+        embed.add_field(name="After", value=after.content, inline=False)
+        embed.set_author(name=before.author.name, icon_url=before.author.avatar.url)
+>>>>>>> Stashed changes
 
         channel = self.client.get_channel(config.channel_ids["message_logs"])
         await channel.send(embed=embed)
@@ -380,7 +400,7 @@ class Logs(commands.Cog):
             embed.add_field(name="Member", value=member.mention, inline=False)
             embed.add_field(name="Channel", value=after.channel.mention, inline=False)
 
-        embed.set_author(name=member.name, icon_url=member.avatar_url)
+        embed.set_author(name=member.name, icon_url=member.avatar.url)
 
         channel = self.client.get_channel(config.channel_ids["voice_logs"])
         await channel.send(embed=embed)

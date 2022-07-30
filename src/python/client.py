@@ -61,6 +61,14 @@ class OUT_Bot(commands.Bot):
         if database_count == 0:
             self.insert_database_user(user_id)
 
+    async def fetch_member(self, user_id):
+        guild = await self.fetch_guild(503560012581568514)
+
+        try: member = await guild.fetch_member(user_id)
+        except discord.NotFound: member = OUT_Bot_Member(user_id, guild)
+
+        return member
+
     @staticmethod
     def create_embed(title, description, color):
         return OUT_Bot_Embed(title, description, color)
@@ -128,6 +136,21 @@ class OUT_Bot(commands.Bot):
             return None
 
         return duration_quantity * duration_unit
+
+class OUT_Bot_Avatar:
+    def __init__(self):
+        self.key = "avatar"
+        self.url = "https://cdn.discordapp.com/embed/avatars/0.png"
+
+class OUT_Bot_Member:
+    def __init__(self, user_id, guild):
+        self.avatar = OUT_Bot_Avatar()
+        self.bot = False
+        self.guild = guild
+        self.id = user_id
+        self.mention = "OldMember#0000"
+        self.name = "OldMember"
+        self.roles = []
 
 class OUT_Bot_Embed(discord.Embed):
     def __init__(self, title, description, color):

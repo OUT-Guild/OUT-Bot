@@ -36,7 +36,7 @@ class Coins(commands.Cog):
 
         user_collection = self.client.get_database_collection("users")
         for user in user_collection.find({"emote": {"$ne": None}}):
-            member = await guild.fetch_member(user["_id"])
+            member = await self.client.fetch_member(user["_id"])
 
             if booster_role not in member.roles and staff_role not in member.roles and override_role not in member.roles:
                 emote = await guild.fetch_emoji(user["emote"])

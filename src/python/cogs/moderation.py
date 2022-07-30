@@ -235,8 +235,8 @@ class Moderation(commands.Cog):
             return await ctx.reply(embed=error_embed)
 
         warning = warning_collection.find_one({"_id": warning_id})
-        member = await ctx.guild.fetch_member(warning["member"])
-        moderator = await ctx.guild.fetch_member(warning["moderator"])
+        member = await self.client.fetch_member(warning["member"])
+        moderator = await self.client.fetch_member(warning["moderator"])
 
         warning_embed = self.client.create_embed(
             "Warning Issued",
@@ -291,7 +291,7 @@ class Moderation(commands.Cog):
 
         while True:
             warning = warnings[page_index]
-            moderator = await ctx.guild.fetch_member(warning["moderator"])
+            moderator = await self.client.fetch_member(warning["moderator"])
 
             warning_embed = self.client.create_embed(
                 "Warning Issued",

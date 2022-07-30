@@ -12,5 +12,3 @@ if __name__ == "__main__":
     client = OUT_Bot(command_prefix="!", intents=discord.Intents.all(), case_insensitive=True, help_command=None,
                      mongodb_uri=getenv("MONGODB_URI"), hypixel_key=getenv("HYPIXEL_KEY"))
     client.run(getenv("BOT_TOKEN"))
-
-await ctx.send("Whew!")

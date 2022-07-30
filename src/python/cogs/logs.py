@@ -77,6 +77,7 @@ class Logs(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
+        if message.channel.id == 870419792849436762: return
         guild = message.guild
 
         embed = discord.Embed(
@@ -108,6 +109,7 @@ class Logs(commands.Cog):
 
     @commands.Cog.listener()
     async def on_bulk_message_delete(self, messages):
+        if messages[0].channel.id == 870419792849436762: return
         guild = messages[0].guild
         channel = messages[0].channel
 
@@ -148,6 +150,7 @@ class Logs(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        if before.channel.id == 870419792849436762: return
         channel = before.channel
 
         if before.author.bot:

@@ -191,7 +191,7 @@ class Applications(commands.Cog):
             return await ctx.reply(embed=error_embed)
 
         application = application_collection.find_one({"_id": application_id})
-        applicant = await ctx.guild.fetch_member(application["member"])
+        applicant = await self.client.fetch_member(application["member"])
 
         application_embed = self.client.create_embed(f"Application #{application['_id']}",
                                                      f"Staff application from {applicant.name} ({applicant.mention}).",
@@ -273,7 +273,7 @@ class Applications(commands.Cog):
 
         while True:
             application = applications[page_index]
-            applicant = await ctx.guild.fetch_member(application["member"])
+            applicant = await self.client.fetch_member(application["member"])
 
             application_embed = self.client.create_embed(f"Application #{application['_id']}",
                                                          f"Staff application from {applicant.name} ({applicant.mention}).",

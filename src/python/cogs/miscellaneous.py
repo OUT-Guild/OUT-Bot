@@ -61,9 +61,11 @@ class Miscellaneous(commands.Cog):
             return True
 
         if "starbuck" in message.content.lower():
+            if message.author.id == 348311499946721282: return
             member = self.client.get_user(348311499946721282)
             check = starbuck_check
         elif "moth" in message.content.lower():
+            if message.author.id == 273890943407751168: return
             member = self.client.get_user(273890943407751168)
             check = moth_check
         else: return

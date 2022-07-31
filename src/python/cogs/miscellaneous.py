@@ -49,7 +49,7 @@ class Miscellaneous(commands.Cog):
 
         def check(cached_message):
             if cached_message.author != message.author: return False
-            if ((datetime.now(tz=cached_message.created_at.tzinfo) + timedelta(seconds=1)) - cached_message.created_at).minutes >= 5: return False
+            if ((datetime.now(tz=cached_message.created_at.tzinfo) + timedelta(seconds=1)) - cached_message.created_at).seconds >= 300: return False
             if "starbuck" not in cached_message.content.lower() and "moth" not in cached_message.content.lower(): return False
             return True
 

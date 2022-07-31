@@ -1,7 +1,7 @@
 import discord_module as discord
 
 from asyncio import sleep, TimeoutError
-from datetime import datetime
+from datetime import datetime, timedelta
 import discord
 from discord.ext import commands
 from json import load
@@ -44,15 +44,22 @@ class Miscellaneous(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.channel.category.id != config.category_ids["ingame"]:
-            if "starbuck" in message.content.lower() and len(list(filter(lambda x: x.author == message.author and "starbuck" in x.content.lower() and (datetime.utcnow() - x.created_at).seconds < 300, self.client.cached_messages))) < 2:
-                member = self.client.get_user(348311499946721282)
-                channel = await member.create_dm()
-                await channel.send(f"Somebody has mentioned you in {message.channel.mention}!")
-            if "moth" in message.content.lower() and len(list(filter(lambda x: x.author == message.author and "moth" in x.content.lower() and (datetime.utcnow() - x.created_at).seconds < 300, self.client.cached_messages))) < 3:
-                member = self.client.get_user(273890943407751168)
-                channel = await member.create_dm()
-                await channel.send(f"Somebody has mentioned you in {message.channel.mention}!")
+        if message.author.id in [348311499946721282, 348311499946721282]: return
+        if message.channel.category.id == config.category_ids["ingame"]: return
+
+        def check(cached_message):
+            if cached_message.author != message.author: return False
+            if ((datetime.now(tz=cached_message.created_at.tzinfo) + timedelta(seconds=1)) - cached_message.created_at).minutes >= 5: return False
+            if "starbuck" not in cached_message.content.lower() and "moth" not in cached_message.content.lower(): return False
+            return True
+
+        if "starbuck" in message.content.lower(): member = self.client.get_user(348311499946721282)
+        elif "moth" in message.content.lower(): member = self.client.get_user(348311499946721282)
+        else: return
+        if len(list(filter(check, self.client.cached_messages))) > 3: return
+
+        channel = await member.create_dm()
+        return await channel.send(f"Somebody has mentioned you in {message.channel.mention}!")
 
     launchcat_details = command_details["launchcat"]
 

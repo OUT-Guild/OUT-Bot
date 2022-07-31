@@ -44,20 +44,31 @@ class Miscellaneous(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.id in [348311499946721282, 348311499946721282]: return
         if message.channel.category.id == config.category_ids["ingame"]: return
 
-        def check(cached_message):
+        def starbuck_check(cached_message):
+            if cached_message.author.id == 348311499946721282: return False
             if cached_message.author != message.author: return False
             if ((datetime.now(tz=cached_message.created_at.tzinfo) + timedelta(seconds=1)) - cached_message.created_at).seconds >= 300: return False
-            if "starbuck" not in cached_message.content.lower() and "moth" not in cached_message.content.lower(): return False
+            if "starbuck" not in cached_message.content.lower(): return False
             return True
 
-        if "starbuck" in message.content.lower(): member = self.client.get_user(348311499946721282)
-        elif "moth" in message.content.lower(): member = self.client.get_user(348311499946721282)
-        else: return
-        if len(list(filter(check, self.client.cached_messages))) > 3: return
+        def moth_check(cached_message):
+            if cached_message.author.id == 273890943407751168: return False
+            if cached_message.author != message.author: return False
+            if ((datetime.now(tz=cached_message.created_at.tzinfo) + timedelta(seconds=1)) - cached_message.created_at).seconds >= 300: return False
+            if "moth" not in cached_message.content.lower(): return False
+            return True
 
+        if "starbuck" in message.content.lower():
+            member = self.client.get_user(348311499946721282)
+            check = starbuck_check
+        elif "moth" in message.content.lower():
+            member = self.client.get_user(273890943407751168)
+            check = moth_check
+        else: return
+
+        if len(list(filter(check, self.client.cached_messages))) > 3: return
         channel = await member.create_dm()
         return await channel.send(f"Somebody has mentioned you in {message.channel.mention}!")
 

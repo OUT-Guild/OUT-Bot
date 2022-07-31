@@ -137,12 +137,6 @@ category_items = {
             "role_id": 745375702647308429
         }, {
             "type": "role",
-            "name": "Star",
-            "description": "Hey now, you're an all star, get your game on, go play. You might know where this is from...",
-            "price": 20000,
-            "role_id": 745375702647308429
-        }, {
-            "type": "role",
             "name": "#WHALE",
             "description": "THE KING OF ALL WHALES!",
             "price": 35069,

@@ -33,7 +33,7 @@ class Moderation(commands.Cog):
                 await message.delete()
 
                 notification_embed = self.client.create_embed("Invalid Character",
-                                                              "Your recently sent message was deleted as our system detected an unknown character. Please understand that this is a new system and not every character has been indexed, this will not count as any form of warning or punishment on your record. If you believe that this character should be allowed, please contact @StarbuckBarista#3347",
+                                                              "Your recently sent message was deleted as our system detected an unknown character. Please understand that this is a new system and not every character has been indexed, this will not count as any form of warning or punishment on your record. If you believe that this character should be allowed, please contact <@!273890943407751168>.",
                                                               config.embed_info_color)
 
                 notification_embed.add_field(name="Character In Question", value=f'"{character}"', inline=False)

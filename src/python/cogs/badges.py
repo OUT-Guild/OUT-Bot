@@ -1,7 +1,7 @@
 import discord_module as discord
 
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 from json import load
 
 import config

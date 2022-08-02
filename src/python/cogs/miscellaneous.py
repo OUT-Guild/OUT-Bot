@@ -24,19 +24,39 @@ class Miscellaneous(commands.Cog):
             return await ctx.reply("L")
         elif isinstance(error, commands.MissingRequiredArgument):
             command = self.command_details[ctx.command.name]
-            command_embed = self.client.create_embed("OUT Help Page", "The command you just ran was used incorrectly.", config.embed_error_color)
-            command_embed.add_field(name=command["usage"],
-                                    value=f"Required Roles: `{', '.join(command['required_roles'])}`\nAliases: `{', '.join(command['aliases']) if len(command['aliases']) > 0 else 'None'}`",
-                                    inline=True)
+
+            command_embed = self.client.create_embed(
+                "OUT Help Page",
+                "The command you just ran was used incorrectly.",
+                config.embed_error_color
+            )
+
+            command_embed.add_field(
+                name=command["usage"],
+                value=f"Required Roles: `{', '.join(command['required_roles'])}`\nAliases: `{', '.join(command['aliases']) if len(command['aliases']) > 0 else 'None'}`",
+                inline=True
+            )
+
             command_embed.set_footer(text=f"Created by: {command['signature']}")
 
             return await ctx.reply(embed=command_embed)
         elif isinstance(error, commands.CommandError):
-            error_embed = self.client.create_embed("Command Raised Error", "The command you attempted to run produced an unexpected error, it will be closely analyzed by our staff.", config.embed_error_color)
+            error_embed = self.client.create_embed(
+                "Command Raised Error",
+                "The command you attempted to run produced an unexpected error, it will be closely analyzed by our staff.",
+                config.embed_error_color
+            )
+
             await ctx.reply(embed=error_embed)
 
             line = format_exception(type(error), error, error.__traceback__)[2].lstrip()
-            log_embed = self.client.create_embed("Command Raised Error", f"```{error}```\n```py\n{line}```\n", config.embed_error_color)
+
+            log_embed = self.client.create_embed(
+                "Command Raised Error",
+                f"```{error}```\n```py\n{line}```\n",
+                config.embed_error_color
+            )
+
             log_embed.set_footer(text=error.__class__.__name__)
 
             log_channel = self.client.get_channel(config.channel_ids["miscellaneous_logs"])
@@ -76,25 +96,32 @@ class Miscellaneous(commands.Cog):
 
     launchcat_details = command_details["launchcat"]
 
-    @commands.command(name="launchcat",
-                      aliases=launchcat_details["aliases"],
-                      usage=launchcat_details["usage"],
-                      description=launchcat_details["description"],
-                      signature=launchcat_details["signature"])
+    @commands.command(
+        name="launchcat",
+        aliases=launchcat_details["aliases"],
+        usage=launchcat_details["usage"],
+        description=launchcat_details["description"],
+        signature=launchcat_details["signature"])
     @commands.has_any_role(*launchcat_details["required_roles"])
     @commands.cooldown(launchcat_details["cooldown_rate"], launchcat_details["cooldown_per"])
     async def launchcat(self, ctx):
-        launchcat_embed = self.client.create_embed("Launch Cat Has Been Summoned!", "Kneel before this great ancient power!", config.embed_success_color)
+        launchcat_embed = self.client.create_embed(
+            "Launch Cat Has Been Summoned!",
+            "Kneel before this great ancient power!",
+            config.embed_success_color
+        )
+
         launchcat_embed.set_image(url="https://i.ibb.co/48GL17V/ezgif-6-e88e29c7c266.gif")
         return await ctx.reply(embed=launchcat_embed)
 
     birthday_details = command_details["birthday"]
 
-    @commands.command(name="birthday",
-                      aliases=birthday_details["aliases"],
-                      usage=birthday_details["usage"],
-                      description=birthday_details["description"],
-                      signature=birthday_details["signature"])
+    @commands.command(
+        name="birthday",
+        aliases=birthday_details["aliases"],
+        usage=birthday_details["usage"],
+        description=birthday_details["description"],
+        signature=birthday_details["signature"])
     @commands.has_any_role(*birthday_details["required_roles"])
     @commands.cooldown(birthday_details["cooldown_rate"], birthday_details["cooldown_per"])
     async def birthday(self, ctx, member: discord.Member, member_name, channel: discord.TextChannel):

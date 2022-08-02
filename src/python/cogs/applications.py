@@ -18,18 +18,21 @@ class Applications(commands.Cog):
 
     apply_details = command_details["apply"]
 
-    @commands.command(name="apply",
-                      aliases=apply_details["aliases"],
-                      usage=apply_details["usage"],
-                      description=apply_details["description"],
-                      signature=apply_details["signature"])
+    @commands.command(
+        name="apply",
+        aliases=apply_details["aliases"],
+        usage=apply_details["usage"],
+        description=apply_details["description"],
+        signature=apply_details["signature"])
     @commands.has_any_role(*apply_details["required_roles"])
     @commands.cooldown(apply_details["cooldown_rate"], apply_details["cooldown_per"])
     async def apply(self, ctx):
         if ctx.channel.id != config.channel_ids["apply"]:
-            error_embed = self.client.create_embed("Incorrect Channel",
-                                                   f"This command may only be used in <#{config.channel_ids['apply']}>.",
-                                                   config.embed_error_color)
+            error_embed = self.client.create_embed(
+                "Incorrect Channel",
+                f"This command may only be used in <#{config.channel_ids['apply']}>.",
+                config.embed_error_color
+            )
 
             return await ctx.reply(embed=error_embed)
 
@@ -37,31 +40,47 @@ class Applications(commands.Cog):
         question_responses = []
 
         async def dms_disabled():
-            dms_embed = self.client.create_embed("DMs Disabled",
-                                                 "Your DMs must be enabled in order to fill out an application.",
-                                                 config.embed_error_color)
+            dms_embed = self.client.create_embed(
+                "DMs Disabled",
+                "Your DMs must be enabled in order to fill out an application.",
+                config.embed_error_color
+            )
 
             await ctx.reply(embed=dms_embed)
 
         async def invalid_response(message):
-            invalid_response_embed = self.client.create_embed("Invalid Response",
-                                                              "The response that you provided to the question was not acceptable.",
-                                                              config.embed_error_color)
+            invalid_response_embed = self.client.create_embed(
+                "Invalid Response",
+                "The response that you provided to the question was not acceptable.",
+                config.embed_error_color
+            )
 
             await message.reply(embed=invalid_response_embed)
 
         gamemodes_selected = []
 
         def get_application_embed(gamemodes_selected):
-            application_embed = self.client.create_embed("Welcome to the OUT Application! Which gamemodes do you have notable stats in?",
-                                                         "Press the checkmark when finished selecting all notable gamemodes.",
-                                                         config.embed_info_color)
+            application_embed = self.client.create_embed(
+                "Welcome to the OUT Application! Which gamemodes do you have notable stats in?",
+                "Press the checkmark when finished selecting all notable gamemodes.",
+                config.embed_info_color
+            )
 
-            application_embed.add_field(name="​",
-                                        value="🌳 - Skyblock\n🛏️ - Bedwars\n☁️ - Skywars\n⚔️ - Duels\n🏹 - Murder Mystery\n🕳️ - Pit\n🍎 - UHC\n🧨 - TNT Games\n🎮 - Arcade")
-            application_embed.add_field(name="​",
-                                        value="🔔 - Classic Games\n🐑 - Wool Wars\n🛠️ - Build Battle\n🥕 - SpeedUHC\n🌟 - Blitz\n🪓 - Warlords\n🥊 - Smash Heroes\n🏰 - Mega Walls\n🔫 - Cops and Crims")
-            application_embed.add_field(name="Gamemodes Selected:", value="None" if len(gamemodes_selected) == 0 else ", ".join(gamemodes_selected), inline=False)
+            application_embed.add_field(
+                name="​",
+                value="🌳 - Skyblock\n🛏️ - Bedwars\n☁️ - Skywars\n⚔️ - Duels\n🏹 - Murder Mystery\n🕳️ - Pit\n🍎 - UHC\n🧨 - TNT Games\n🎮 - Arcade"
+            )
+
+            application_embed.add_field(
+                name="​",
+                value="🔔 - Classic Games\n🐑 - Wool Wars\n🛠️ - Build Battle\n🥕 - SpeedUHC\n🌟 - Blitz\n🪓 - Warlords\n🥊 - Smash Heroes\n🏰 - Mega Walls\n🔫 - Cops and Crims"
+            )
+
+            application_embed.add_field(
+                name="Gamemodes Selected:",
+                value="None" if len(gamemodes_selected) == 0 else ", ".join(gamemodes_selected),
+                inline=False
+            )
 
             return application_embed
 
@@ -94,15 +113,19 @@ class Applications(commands.Cog):
                 application_question_reply = await self.client.message_response(application_question_message, ctx.author, 900)
 
                 if len(application_question_reply.content.replace(" ", "")) == 0:  # The member replied with an image
-                    image_embed = self.client.create_embed("Responded With Image",
-                                                           "You may not answer application questions with images.",
-                                                           config.embed_error_color)
+                    image_embed = self.client.create_embed(
+                        "Responded With Image",
+                        "You may not answer application questions with images.",
+                        config.embed_error_color
+                    )
 
                     await application_question_reply.reply(embed=image_embed)
                 elif len(application_question_reply.content) > 1024:
-                    length_embed = self.client.create_embed("Responded With Long Answer",
-                                                            "You may not exceed 1024 characters with your application responses.",
-                                                            config.embed_error_color)
+                    length_embed = self.client.create_embed(
+                        "Responded With Long Answer",
+                        "You may not exceed 1024 characters with your application responses.",
+                        config.embed_error_color
+                    )
 
                     await application_question_reply.reply(embed=length_embed)
                 else:
@@ -126,8 +149,7 @@ class Applications(commands.Cog):
             return await invalid_response(application_confirm_message)
 
         if application_confirm_reply == "✅":
-            question_responses[1] = question_responses[1].replace("_",
-                                                                  r"\_")  # Prevents usernames from being subjected to markdown
+            question_responses[1] = question_responses[1].replace("_", r"\_")  # Prevents usernames from being subjected to markdown
             application_collection = self.client.get_database_collection("applications")
 
             while True:
@@ -144,83 +166,107 @@ class Applications(commands.Cog):
 
                     break
 
-            application_embed = self.client.create_embed("Application Submitted",
-                                                         f"Guild application from {ctx.author.name} ({ctx.author.mention}).",
-                                                         config.embed_info_color)
+            application_embed = self.client.create_embed(
+                "Application Submitted",
+                f"Guild application from {ctx.author.name} ({ctx.author.mention}).",
+                config.embed_info_color
+            )
 
-            application_embed.add_field(name="Gamemodes Selected:", value="None" if len(gamemodes_selected) == 0 else ", ".join(gamemodes_selected), inline=False)
+            application_embed.add_field(
+                name="Gamemodes Selected:",
+                value="None" if len(gamemodes_selected) == 0 else ", ".join(gamemodes_selected),
+                inline=False
+            )
 
             for question_number, question_answer in enumerate(question_responses, 1):
-                application_embed.add_field(name=f"{question_number}. {config.application_questions[question_number - 1].splitlines()[1]}",
-                                            value=question_answer, inline=False)
+                application_embed.add_field(
+                    name=f"{question_number}. {config.application_questions[question_number - 1].splitlines()[1]}",
+                    value=question_answer,
+                    inline=False
+                )
 
             application_embed.set_footer(text=f"Application ID: {application_id}")
 
             applications_channel = self.client.get_channel(config.channel_ids["applications"])
             await applications_channel.send(embed=application_embed)
 
-            success_embed = self.client.create_embed("Application Submitted",
-                                                     "Your application has been sent to our staff team for review, good luck!",
-                                                     config.embed_info_color)
+            success_embed = self.client.create_embed(
+                "Application Submitted",
+                "Your application has been sent to our staff team for review, good luck!",
+                config.embed_info_color
+            )
 
             await application_confirm_message.reply(embed=success_embed)
         else:
-            cancelled_embed = self.client.create_embed("Application Cancelled",
-                                                       "Your application has been cancelled and was not submitted to our staff team. You always have the opportunity to apply again if you're interested in joining OUT.",
-                                                       config.embed_info_color)
+            cancelled_embed = self.client.create_embed(
+                "Application Cancelled",
+                "Your application has been cancelled and was not submitted to our staff team. You always have the opportunity to apply again if you're interested in joining OUT.",
+                config.embed_info_color
+            )
 
             await application_confirm_message.reply(embed=cancelled_embed)
 
     application_details = command_details["application"]
 
-    @commands.command(name="application",
-                      aliases=application_details["aliases"],
-                      usage=application_details["usage"],
-                      description=application_details["description"],
-                      signature=application_details["signature"])
+    @commands.command(
+        name="application",
+        aliases=application_details["aliases"],
+        usage=application_details["usage"],
+        description=application_details["description"],
+        signature=application_details["signature"])
     @commands.has_any_role(*application_details["required_roles"])
     @commands.cooldown(application_details["cooldown_rate"], application_details["cooldown_per"])
     async def application(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
         if application_collection.find({"_id": application_id}).count() == 0:
-            error_embed = self.client.create_embed("Application Not Found",
-                                                   "No application with that ID was found in my database.",
-                                                   config.embed_error_color)
+            error_embed = self.client.create_embed(
+                "Application Not Found",
+                "No application with that ID was found in my database.",
+                config.embed_error_color
+            )
 
             return await ctx.reply(embed=error_embed)
 
         application = application_collection.find_one({"_id": application_id})
         applicant = await self.client.fetch_member(application["member"])
 
-        application_embed = self.client.create_embed(f"Application #{application['_id']}",
-                                                     f"Staff application from {applicant.name} ({applicant.mention}).",
-                                                     config.embed_info_color)
+        application_embed = self.client.create_embed(
+            f"Application #{application['_id']}",
+            f"Staff application from {applicant.name} ({applicant.mention}).",
+            config.embed_info_color
+        )
 
-        application_embed.add_field(name="Gamemodes Selected:",
-                                    value="None" if len(application["gamemodes"]) == 0 else ", ".join(
-                                        application["gamemodes"]), inline=False)
+        application_embed.add_field(
+            name="Gamemodes Selected:",
+            value="None" if len(application["gamemodes"]) == 0 else ", ".join(application["gamemodes"]),
+            inline=False
+        )
 
         for question_number, question_answer in enumerate(application["answers"], 1):
             application_embed.add_field(
                 name=f"{question_number}. {config.application_questions[question_number - 1].splitlines()[1]}",
-                value=question_answer, inline=False)
+                value=question_answer, inline=False
+            )
 
         return await ctx.reply(embed=application_embed)
 
     applications_details = command_details["applications"]
 
-    @commands.command(name="applications",
-                      aliases=applications_details["aliases"],
-                      usage=applications_details["usage"],
-                      description=applications_details["description"],
-                      signature=applications_details["signature"])
+    @commands.command(
+        name="applications",
+        aliases=applications_details["aliases"],
+        usage=applications_details["usage"],
+        description=applications_details["description"],
+        signature=applications_details["signature"])
     @commands.has_any_role(*applications_details["required_roles"])
     @commands.cooldown(applications_details["cooldown_rate"], applications_details["cooldown_per"])
     async def applications(self, ctx):
-        applications_filter_embed = self.client.create_embed("Applications Filter",
-                                                             "What filters would you like to apply to the applications database?\n:one: No Filter\n:two: Unread\n:three: Accepted\n:four: Rejected\n:five: Cancelled",
-                                                             config.embed_info_color)
+        applications_filter_embed = self.client.create_embed(
+            "Applications Filter",
+            "What filters would you like to apply to the applications database?\n:one: No Filter\n:two: Unread\n:three: Accepted\n:four: Rejected\n:five: Cancelled",
+            config.embed_info_color
+        )
 
         message = await ctx.reply(embed=applications_filter_embed)
 
@@ -236,9 +282,11 @@ class Applications(commands.Cog):
             return
 
         async def invalid_response():
-            invalid_response_embed = self.client.create_embed("Invalid Response",
-                                                              "The response that you provided to the question was not acceptable.",
-                                                              config.embed_error_color)
+            invalid_response_embed = self.client.create_embed(
+                "Invalid Response",
+                "The response that you provided to the question was not acceptable.",
+                config.embed_error_color
+            )
 
             await message.edit(embed=invalid_response_embed)
 
@@ -259,15 +307,19 @@ class Applications(commands.Cog):
         page_index = 0
 
         if applications.count() == 0:
-            no_applications_embed = self.client.create_embed("No Applications",
-                                                             "No applications were found matching your query.",
-                                                             config.embed_error_color)
+            no_applications_embed = self.client.create_embed(
+                "No Applications",
+                "No applications were found matching your query.",
+                config.embed_error_color
+            )
 
             return await message.edit(embed=no_applications_embed)
 
-        loading_data_embed = self.client.create_embed("Loading Data",
-                                                      "Currently fetching data from our database...",
-                                                      config.embed_info_color)
+        loading_data_embed = self.client.create_embed(
+            "Loading Data",
+            "Currently fetching data from our database...",
+            config.embed_info_color
+        )
 
         await message.edit(embed=loading_data_embed)
 
@@ -275,16 +327,24 @@ class Applications(commands.Cog):
             application = applications[page_index]
             applicant = await self.client.fetch_member(application["member"])
 
-            application_embed = self.client.create_embed(f"Application #{application['_id']}",
-                                                         f"Staff application from {applicant.name} ({applicant.mention}).",
-                                                         config.embed_info_color)
+            application_embed = self.client.create_embed(
+                f"Application #{application['_id']}",
+                f"Staff application from {applicant.name} ({applicant.mention}).",
+                config.embed_info_color
+            )
 
-            application_embed.add_field(name="Gamemodes Selected:", value="None" if len(application["gamemodes"]) == 0 else ", ".join(application["gamemodes"]), inline=False)
+            application_embed.add_field(
+                name="Gamemodes Selected:",
+                value="None" if len(application["gamemodes"]) == 0 else ", ".join(application["gamemodes"]),
+                inline=False
+            )
 
             for question_number, question_answer in enumerate(application["answers"], 1):
                 application_embed.add_field(
                     name=f"{question_number}. {config.application_questions[question_number - 1].splitlines()[1]}",
-                    value=question_answer, inline=False)
+                    value=question_answer,
+                    inline=False
+                )
 
             application_embed.set_footer(text=f"Page {page_index + 1}/{applications.count()}")
 
@@ -302,9 +362,11 @@ class Applications(commands.Cog):
                 return
 
             async def invalid_response():
-                invalid_response_embed = self.client.create_embed("Invalid Response",
-                                                                  "The response that you provided to the question was not acceptable.",
-                                                                  config.embed_error_color)
+                invalid_response_embed = self.client.create_embed(
+                    "Invalid Response",
+                    "The response that you provided to the question was not acceptable.",
+                    config.embed_error_color
+                )
 
                 await message.edit(embed=invalid_response_embed)
 
@@ -337,28 +399,33 @@ class Applications(commands.Cog):
 
     accept_details = command_details["accept"]
 
-    @commands.command(name="accept",
-                      aliases=accept_details["aliases"],
-                      usage=accept_details["usage"],
-                      description=accept_details["description"],
-                      signature=accept_details["signature"])
+    @commands.command(
+        name="accept",
+        aliases=accept_details["aliases"],
+        usage=accept_details["usage"],
+        description=accept_details["description"],
+        signature=accept_details["signature"])
     @commands.has_any_role(*accept_details["required_roles"])
     @commands.cooldown(accept_details["cooldown_rate"], accept_details["cooldown_per"])
     async def accept(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
         if application_collection.find({"_id": application_id, "status": "PENDING"}).count() == 0:
-            error_embed = self.client.create_embed("Application Not Found",
-                                                   "No application with that ID was found in my database.",
-                                                   config.embed_error_color)
+            error_embed = self.client.create_embed(
+                "Application Not Found",
+                "No application with that ID was found in my database.",
+                config.embed_error_color
+            )
 
             return await ctx.reply(embed=error_embed)
 
         user = await self.client.fetch_user(application_collection.find_one({"_id": application_id})["member"])
 
-        application_add_note_embed = self.client.create_embed("Add Note to Application",
-                                                              "Would you like to write a note to the applicant regarding their application?",
-                                                              config.embed_info_color)
+        application_add_note_embed = self.client.create_embed(
+            "Add Note to Application",
+            "Would you like to write a note to the applicant regarding their application?",
+            config.embed_info_color
+        )
 
         application_add_note_message = await ctx.reply(embed=application_add_note_embed)
 
@@ -371,9 +438,11 @@ class Applications(commands.Cog):
             return
 
         async def invalid_response(message):
-            invalid_response_embed = self.client.create_embed("Invalid Response",
-                                                              "The response that you provided to the question was not acceptable.",
-                                                              config.embed_error_color)
+            invalid_response_embed = self.client.create_embed(
+                "Invalid Response",
+                "The response that you provided to the question was not acceptable.",
+                config.embed_error_color
+            )
 
             await message.reply(embed=invalid_response_embed)
 
@@ -382,9 +451,11 @@ class Applications(commands.Cog):
 
         async def accept_application(last_reply, note=None):
             application_collection.update_one({"_id": application_id}, {"$set": {"status": "ACCEPTED"}})
-            application_accept_embed = self.client.create_embed("Application Accepted",
-                                                                "Your application to the OUT Guild has been accepted, congratulations!",
-                                                                config.embed_success_color)
+            application_accept_embed = self.client.create_embed(
+                "Application Accepted",
+                "Your application to the OUT Guild has been accepted, congratulations!",
+                config.embed_success_color
+            )
 
             if note is not None:
                 application_accept_embed.add_field(name="Note", value=note, inline=True)
@@ -397,9 +468,11 @@ class Applications(commands.Cog):
             except Forbidden:  # The user has DMs disabled
                 notification_sent = False
 
-            log_embed = self.client.create_embed("Application Accepted",
-                                                 "An application was accepted by a moderator.",
-                                                 config.embed_info_color)
+            log_embed = self.client.create_embed(
+                "Application Accepted",
+                "An application was accepted by a moderator.",
+                config.embed_info_color
+            )
 
             log_embed.add_field(name="Application ID", value=application_id, inline=True)
             log_embed.add_field(name="Moderator", value=f"{ctx.author.name} ({ctx.author.mention})", inline=False)
@@ -413,13 +486,14 @@ class Applications(commands.Cog):
             log_channel = self.client.get_channel(config.channel_ids["applications"])
             await log_channel.send(embed=log_embed)
 
-            success_embed = self.client.create_embed("Application Accepted",
-                                                     f"Your acceptance of application #{application_id} was successful.",
-                                                     config.embed_success_color)
+            success_embed = self.client.create_embed(
+                "Application Accepted",
+                f"Your acceptance of application #{application_id} was successful.",
+                config.embed_success_color
+            )
 
             success_embed.add_field(name="Application ID", value=application_id, inline=True)
-            success_embed.add_field(name="Applicant", value=f"{user.name} ({user.mention})",
-                                    inline=False)
+            success_embed.add_field(name="Applicant", value=f"{user.name} ({user.mention})", inline=False)
 
             if note is not None:
                 success_embed.add_field(name="Application Note", value=note, inline=True)
@@ -432,9 +506,11 @@ class Applications(commands.Cog):
         if application_add_note_reply == "❌":
             await accept_application(application_add_note_message)
         else:  # A note will be added
-            note_embed = self.client.create_embed("Application Note",
-                                                  f"What note would you like to add to the acceptance of application #{application_id}?",
-                                                  config.embed_info_color)
+            note_embed = self.client.create_embed(
+                "Application Note",
+                f"What note would you like to add to the acceptance of application #{application_id}?",
+                config.embed_info_color
+            )
 
             note_message = await application_add_note_message.reply(embed=note_embed)
             note_reply = await self.client.message_response(note_message, ctx.author, 60)
@@ -446,28 +522,33 @@ class Applications(commands.Cog):
 
     reject_details = command_details["reject"]
 
-    @commands.command(name="reject",
-                      aliases=reject_details["aliases"],
-                      usage=reject_details["usage"],
-                      description=reject_details["description"],
-                      signature=reject_details["signature"])
+    @commands.command(
+        name="reject",
+        aliases=reject_details["aliases"],
+        usage=reject_details["usage"],
+        description=reject_details["description"],
+        signature=reject_details["signature"])
     @commands.has_any_role(*reject_details["required_roles"])
     @commands.cooldown(reject_details["cooldown_rate"], reject_details["cooldown_per"])
     async def reject(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
         if application_collection.find({"_id": application_id, "status": "PENDING"}).count() == 0:
-            error_embed = self.client.create_embed("Application Not Found",
-                                                   "No application with that ID was found in my database.",
-                                                   config.embed_error_color)
+            error_embed = self.client.create_embed(
+                "Application Not Found",
+                "No application with that ID was found in my database.",
+                config.embed_error_color
+            )
 
             return await ctx.reply(embed=error_embed)
 
         user = await self.client.fetch_user(application_collection.find_one({"_id": application_id})["member"])
 
-        application_add_note_embed = self.client.create_embed("Add Note to Application",
-                                                              "Would you like to write a note to the applicant regarding their application?",
-                                                              config.embed_info_color)
+        application_add_note_embed = self.client.create_embed(
+            "Add Note to Application",
+            "Would you like to write a note to the applicant regarding their application?",
+            config.embed_info_color
+        )
 
         application_add_note_message = await ctx.reply(embed=application_add_note_embed)
 
@@ -480,9 +561,11 @@ class Applications(commands.Cog):
             return
 
         async def invalid_response(message):
-            invalid_response_embed = self.client.create_embed("Invalid Response",
-                                                              "The response that you provided to the question was not acceptable.",
-                                                              config.embed_error_color)
+            invalid_response_embed = self.client.create_embed(
+                "Invalid Response",
+                "The response that you provided to the question was not acceptable.",
+                config.embed_error_color
+            )
 
             await message.reply(embed=invalid_response_embed)
 
@@ -491,9 +574,11 @@ class Applications(commands.Cog):
 
         async def reject_application(last_reply, note=None):
             application_collection.update_one({"_id": application_id}, {"$set": {"status": "REJECTED"}})
-            application_accept_embed = self.client.create_embed("Application Rejection",
-                                                                "Your application to the OUT Guild has been rejected, you have the right to re-appy in 7 days time.",
-                                                                config.embed_error_color)
+            application_accept_embed = self.client.create_embed(
+                "Application Rejection",
+                "Your application to the OUT Guild has been rejected, you have the right to re-appy in 7 days time.",
+                config.embed_error_color
+            )
 
             if note is not None:
                 application_accept_embed.add_field(name="Note", value=note, inline=True)
@@ -506,9 +591,11 @@ class Applications(commands.Cog):
             except Forbidden:  # The user has DMs disabled
                 notification_sent = False
 
-            log_embed = self.client.create_embed("Application Rejected",
-                                                 "An application was rejected by a moderator.",
-                                                 config.embed_info_color)
+            log_embed = self.client.create_embed(
+                "Application Rejected",
+                "An application was rejected by a moderator.",
+                config.embed_info_color
+            )
 
             log_embed.add_field(name="Application ID", value=application_id, inline=True)
             log_embed.add_field(name="Moderator", value=f"{ctx.author.name} ({ctx.author.mention})", inline=False)
@@ -522,29 +609,31 @@ class Applications(commands.Cog):
             log_channel = self.client.get_channel(config.channel_ids["applications"])
             await log_channel.send(embed=log_embed)
 
-            success_embed = self.client.create_embed("Application Rejected",
-                                                     f"Your rejection of application #{application_id} was successful.",
-                                                     config.embed_success_color)
+            success_embed = self.client.create_embed(
+                "Application Rejected",
+                f"Your rejection of application #{application_id} was successful.",
+                config.embed_success_color
+            )
 
             success_embed.add_field(name="Application ID", value=application_id, inline=True)
-            success_embed.add_field(name="Applicant", value=f"{user.name} ({user.mention})",
-                                    inline=False)
+            success_embed.add_field(name="Applicant", value=f"{user.name} ({user.mention})", inline=False)
 
             if note is not None:
                 success_embed.add_field(name="Application Note", value=note, inline=True)
 
             if not notification_sent:
-                success_embed.set_footer(
-                    text="The member did not receive a notification because their DMs are disabled.")
+                success_embed.set_footer(text="The member did not receive a notification because their DMs are disabled.")
 
             return await last_reply.reply(embed=success_embed)
 
         if application_add_note_reply == "❌":
             await reject_application(application_add_note_message)
         else:  # A note will be added
-            note_embed = self.client.create_embed("Application Note",
-                                                  f"What note would you like to add to the acceptance of application #{application_id}?",
-                                                  config.embed_info_color)
+            note_embed = self.client.create_embed(
+                "Application Note",
+                f"What note would you like to add to the acceptance of application #{application_id}?",
+                config.embed_info_color
+            )
 
             note_message = await application_add_note_message.reply(embed=note_embed)
             note_reply = await self.client.message_response(note_message, ctx.author, 60)
@@ -556,20 +645,23 @@ class Applications(commands.Cog):
 
     cancel_details = command_details["cancel"]
 
-    @commands.command(name="cancel",
-                      aliases=cancel_details["aliases"],
-                      usage=cancel_details["usage"],
-                      description=cancel_details["description"],
-                      signature=cancel_details["signature"])
+    @commands.command(
+        name="cancel",
+        aliases=cancel_details["aliases"],
+        usage=cancel_details["usage"],
+        description=cancel_details["description"],
+        signature=cancel_details["signature"])
     @commands.has_any_role(*cancel_details["required_roles"])
     @commands.cooldown(cancel_details["cooldown_rate"], cancel_details["cooldown_per"])
     async def cancel(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
         if application_collection.find({"_id": application_id, "status": "PENDING"}).count() == 0:
-            error_embed = self.client.create_embed("Application Not Found",
-                                                   "No application with that ID was found in my database.",
-                                                   config.embed_error_color)
+            error_embed = self.client.create_embed(
+                "Application Not Found",
+                "No application with that ID was found in my database.",
+                config.embed_error_color
+            )
 
             return await ctx.reply(embed=error_embed)
 
@@ -577,9 +669,11 @@ class Applications(commands.Cog):
 
         async def cancel_application(last_reply):
             application_collection.update_one({"_id": application_id}, {"$set": {"status": "CANCELLED"}})
-            log_embed = self.client.create_embed("Application Rejected",
-                                                 "An application was rejected by a moderator.",
-                                                 config.embed_info_color)
+            log_embed = self.client.create_embed(
+                "Application Rejected",
+                "An application was rejected by a moderator.",
+                config.embed_info_color
+            )
 
             log_embed.add_field(name="Application ID", value=application_id, inline=True)
             log_embed.add_field(name="Moderator", value=f"{ctx.author.name} ({ctx.author.mention})", inline=False)
@@ -587,13 +681,14 @@ class Applications(commands.Cog):
             log_channel = self.client.get_channel(config.channel_ids["applications"])
             await log_channel.send(embed=log_embed)
 
-            success_embed = self.client.create_embed("Application Rejected",
-                                                     f"Your rejection of application #{application_id} was successful.",
-                                                     config.embed_success_color)
+            success_embed = self.client.create_embed(
+                "Application Rejected",
+                f"Your rejection of application #{application_id} was successful.",
+                config.embed_success_color
+            )
 
             success_embed.add_field(name="Application ID", value=application_id, inline=True)
-            success_embed.add_field(name="Applicant", value=f"{user.name} ({user.mention})",
-                                    inline=False)
+            success_embed.add_field(name="Applicant", value=f"{user.name} ({user.mention})", inline=False)
 
             return await last_reply.reply(embed=success_embed)
 

@@ -24,17 +24,20 @@ class Cog_Manager(commands.Cog):
 
     cogs_details = command_details["cogs"]
 
-    @commands.command(name="cogs",
-                      aliases=cogs_details["aliases"],
-                      usage=cogs_details["usage"],
-                      description=cogs_details["description"],
-                      signature=cogs_details["signature"])
+    @commands.command(
+        name="cogs",
+        aliases=cogs_details["aliases"],
+        usage=cogs_details["usage"],
+        description=cogs_details["description"],
+        signature=cogs_details["signature"])
     @commands.has_any_role(*cogs_details["required_roles"])
     @commands.cooldown(cogs_details["cooldown_rate"], cogs_details["cooldown_per"])
     async def cogs(self, ctx):
-        embed = self.client.create_embed("Cog Report",
-                                         "The listing of the enabled and disabled cogs.",
-                                         config.embed_info_color)
+        embed = self.client.create_embed(
+            "Cog Report",
+            "The listing of the enabled and disabled cogs.",
+            config.embed_info_color
+        )
 
         booleanMapping = {True: "Enabled", False: "Disabled"}
 
@@ -45,11 +48,12 @@ class Cog_Manager(commands.Cog):
 
     start_cog_details = command_details["start_cog"]
 
-    @commands.command(name="start_cog",
-                      aliases=start_cog_details["aliases"],
-                      usage=start_cog_details["usage"],
-                      description=start_cog_details["description"],
-                      signature=start_cog_details["signature"])
+    @commands.command(
+        name="start_cog",
+        aliases=start_cog_details["aliases"],
+        usage=start_cog_details["usage"],
+        description=start_cog_details["description"],
+        signature=start_cog_details["signature"])
     @commands.has_any_role(*start_cog_details["required_roles"])
     @commands.cooldown(start_cog_details["cooldown_rate"], start_cog_details["cooldown_per"])
     async def start_cog(self, ctx, *cog_name):
@@ -60,9 +64,11 @@ class Cog_Manager(commands.Cog):
                 cog = list(config.cog_aliases.keys())[list(config.cog_aliases.values()).index(cog_aliases)]
 
         if cog is None:
-            embed = self.client.create_embed("Unknown Cog",
-                                             "The cog that you were looking for was not found in my database. If you believe this to be a false error, please contact @StarbuckBarista#3347",
-                                             config.embed_error_color)
+            embed = self.client.create_embed(
+                "Unknown Cog",
+                "The cog that you were looking for was not found in my database. If you believe this to be a false error, please contact @StarbuckBarista#3347",
+                config.embed_error_color
+            )
 
             embed.add_field(name="Command Run by", value=f"{ctx.author.mention} ({ctx.author.name})", inline=False)
             embed.add_field(name="Cog Referred", value=" ".join(cog_name), inline=True)
@@ -70,9 +76,11 @@ class Cog_Manager(commands.Cog):
             return await ctx.reply(embed=embed)
 
         if cog in self.loaded_cogs:
-            embed = self.client.create_embed("Unable to Start Cog",
-                                             "The cog that you requested has already been enabled.",
-                                             config.embed_error_color)
+            embed = self.client.create_embed(
+                "Unable to Start Cog",
+                "The cog that you requested has already been enabled.",
+                config.embed_error_color
+            )
 
             embed.add_field(name="Command Run by", value=f"{ctx.author.mention} ({ctx.author.name})", inline=False)
             embed.add_field(name="Cog Referred", value=cog, inline=True)
@@ -82,9 +90,11 @@ class Cog_Manager(commands.Cog):
         self.client.load_extention(f"cogs.{cog}")
         self.loaded_cogs.append(cog)
 
-        embed = self.client.create_embed("Cog Enabled",
-                                         "The cog that you requested has been enabled.",
-                                         config.embed_success_color)
+        embed = self.client.create_embed(
+            "Cog Enabled",
+            "The cog that you requested has been enabled.",
+            config.embed_success_color
+        )
 
         embed.add_field(name="Command Run by", value=f"{ctx.author.mention} ({ctx.author.name})", inline=False)
         embed.add_field(name="Cog Referred", value=cog, inline=True)
@@ -93,11 +103,12 @@ class Cog_Manager(commands.Cog):
 
     stop_cog_details = command_details["stop_cog"]
 
-    @commands.command(name="stop_cog",
-                      aliases=stop_cog_details["aliases"],
-                      usage=stop_cog_details["usage"],
-                      description=stop_cog_details["description"],
-                      signature=stop_cog_details["signature"])
+    @commands.command(
+        name="stop_cog",
+        aliases=stop_cog_details["aliases"],
+        usage=stop_cog_details["usage"],
+        description=stop_cog_details["description"],
+        signature=stop_cog_details["signature"])
     @commands.has_any_role(*stop_cog_details["required_roles"])
     @commands.cooldown(stop_cog_details["cooldown_rate"], stop_cog_details["cooldown_per"])
     async def stop_cog(self, ctx, *cog_name):
@@ -108,9 +119,11 @@ class Cog_Manager(commands.Cog):
                 cog = list(config.cog_aliases.keys())[list(config.cog_aliases.values()).index(cog_aliases)]
 
         if cog is None:
-            embed = self.client.create_embed("Unknown Cog",
-                                             "The cog that you were looking for was not found in my database. If you believe this to be a false error, please contact @StarbuckBarista#3347",
-                                             config.embed_error_color)
+            embed = self.client.create_embed(
+                "Unknown Cog",
+                "The cog that you were looking for was not found in my database. If you believe this to be a false error, please contact @StarbuckBarista#3347",
+                config.embed_error_color
+            )
 
             embed.add_field(name="Command Run by", value=f"{ctx.author.mention} ({ctx.author.name})", inline=False)
             embed.add_field(name="Cog Referred", value=" ".join(cog_name), inline=True)
@@ -118,9 +131,11 @@ class Cog_Manager(commands.Cog):
             return await ctx.reply(embed=embed)
 
         if cog not in self.loaded_cogs:
-            embed = self.client.create_embed("Unable to Stop Cog",
-                                             "The cog that you requested has already been disabled.",
-                                             config.embed_error_color)
+            embed = self.client.create_embed(
+                "Unable to Stop Cog",
+                "The cog that you requested has already been disabled.",
+                config.embed_error_color
+            )
 
             embed.add_field(name="Command Run by", value=f"{ctx.author.mention} ({ctx.author.name})", inline=False)
             embed.add_field(name="Cog Referred", value=cog, inline=True)
@@ -130,9 +145,11 @@ class Cog_Manager(commands.Cog):
         self.client.unload_extention(f"cogs.{cog}")
         self.loaded_cogs.remove(cog)
 
-        embed = self.client.create_embed("Cog Disabled",
-                                         "The cog that you requested has been disabled.",
-                                         config.embed_success_color)
+        embed = self.client.create_embed(
+            "Cog Disabled",
+            "The cog that you requested has been disabled.",
+            config.embed_success_color
+        )
 
         embed.add_field(name="Command Run by", value=f"{ctx.author.mention} ({ctx.author.name})", inline=False)
         embed.add_field(name="Cog Referred", value=cog, inline=True)
@@ -141,11 +158,12 @@ class Cog_Manager(commands.Cog):
 
     help_details = command_details["help"]
 
-    @commands.command(name="help",
-                      aliases=help_details["aliases"],
-                      usage=help_details["usage"],
-                      description=help_details["description"],
-                      signature=help_details["signature"])
+    @commands.command(
+        name="help",
+        aliases=help_details["aliases"],
+        usage=help_details["usage"],
+        description=help_details["description"],
+        signature=help_details["signature"])
     @commands.has_any_role(*help_details["required_roles"])
     @commands.cooldown(help_details["cooldown_rate"], help_details["cooldown_per"])
     async def help(self, ctx, category=None):
@@ -160,9 +178,12 @@ class Cog_Manager(commands.Cog):
 
         category = category.lower()
         if category not in config.help_categories:
-            category_embed = self.client.create_embed("Invalid Help Category",
-                                                      "There is no help category by that name.",
-                                                      config.embed_error_color)
+            category_embed = self.client.create_embed(
+                "Invalid Help Category",
+                "There is no help category by that name.",
+                config.embed_error_color
+            )
+
             return await ctx.reply(embed=category_embed)
 
         commands = []
@@ -188,7 +209,13 @@ class Cog_Manager(commands.Cog):
         while True:
             command = commands[command_index]
             command_embed = self.client.create_embed("OUT Help Page", command["description"], config.embed_info_color)
-            command_embed.add_field(name=command["usage"], value=f"Required Roles: `{', '.join(command['required_roles'])}`\nAliases: `{', '.join(command['aliases']) if len(command['aliases']) > 0 else 'None'}`", inline=True)
+
+            command_embed.add_field(
+                name=command["usage"],
+                value=f"Required Roles: `{', '.join(command['required_roles'])}`\nAliases: `{', '.join(command['aliases']) if len(command['aliases']) > 0 else 'None'}`",
+                inline=True
+            )
+
             command_embed.set_footer(text=f"Created by: {command['signature']}")
 
             await help_message.edit(embed=command_embed)
@@ -204,9 +231,11 @@ class Cog_Manager(commands.Cog):
                 await help_message.remove_reaction("➡", ctx.guild.me)
                 await help_message.remove_reaction("⏭", ctx.guild.me)
 
-                invalid_response_embed = self.client.create_embed("Invalid Response",
-                                                                  "The response that you provided to the question was not acceptable.",
-                                                                  config.embed_error_color)
+                invalid_response_embed = self.client.create_embed(
+                    "Invalid Response",
+                    "The response that you provided to the question was not acceptable.",
+                    config.embed_error_color
+                )
 
                 await help_message.edit(embed=invalid_response_embed)
 
@@ -238,11 +267,12 @@ class Cog_Manager(commands.Cog):
 
     ping_details = command_details["ping"]
 
-    @commands.command(name="ping",
-                      aliases=ping_details["aliases"],
-                      usage=ping_details["usage"],
-                      description=ping_details["description"],
-                      signature=ping_details["signature"])
+    @commands.command(
+        name="ping",
+        aliases=ping_details["aliases"],
+        usage=ping_details["usage"],
+        description=ping_details["description"],
+        signature=ping_details["signature"])
     @commands.has_any_role(*ping_details["required_roles"])
     @commands.cooldown(ping_details["cooldown_rate"], ping_details["cooldown_per"])
     async def ping(self, ctx):
@@ -258,11 +288,12 @@ class Cog_Manager(commands.Cog):
 
     eval_details = command_details["eval"]
 
-    @commands.command(name="eval",
-                      aliases=eval_details["aliases"],
-                      usage=eval_details["usage"],
-                      description=eval_details["description"],
-                      signature=eval_details["signature"])
+    @commands.command(
+        name="eval",
+        aliases=eval_details["aliases"],
+        usage=eval_details["usage"],
+        description=eval_details["description"],
+        signature=eval_details["signature"])
     @commands.has_any_role(*eval_details["required_roles"])
     @commands.cooldown(eval_details["cooldown_rate"], eval_details["cooldown_per"])
     async def eval(self, ctx, *, code):

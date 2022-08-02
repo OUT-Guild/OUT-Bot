@@ -97,9 +97,11 @@ class Logs(commands.Cog):
                 self.lastAuditID = entry.id
                 embed.add_field(name="Deleter", value=entry.user.mention, inline=False)
             else:
-                embed.add_field(name="Deleter",
-                                value=f"Either {message.author.mention} or {self.client.user.mention}",
-                                inline=False)
+                embed.add_field(
+                    name="Deleter",
+                    value=f"Either {message.author.mention} or {self.client.user.mention}",
+                    inline=False
+                )
 
         for attachment in message.attachments:
             embed.set_image(url=attachment.proxy_url)
@@ -142,8 +144,11 @@ class Logs(commands.Cog):
             embed.set_author(name=message.author.name, icon_url=message.author.avatar.url)
 
             for attachment in message.attachments:
-                embed.add_field(name="Attachment #{}".format(message.attachments.index(attachment) + 1),
-                                value=attachment.url, inline=False)
+                embed.add_field(
+                    name="Attachment #{}".format(message.attachments.index(attachment) + 1),
+                    value=attachment.url,
+                    inline=False
+                )
 
             channel = self.client.get_channel(config.channel_ids["message_logs"])
             await channel.send(embed=embed)

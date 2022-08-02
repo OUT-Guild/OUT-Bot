@@ -77,17 +77,22 @@ class Coins(commands.Cog):
 
                     await self.client.database_user_preload(message.author.id)
                     user_collection = self.client.get_database_collection("users")
-                    user_collection.update_one({"_id": message.author.id},
-                                               {"$inc": {"coins": randint(randomizer[0], randomizer[1])}})
+
+                    user_collection.update_one(
+                        {"_id": message.author.id},
+                        {"$inc": {"coins": randint(randomizer[0], randomizer[1])}}
+                    )
+
                     self.messages[message.author.id] = current_time
 
     profile_details = command_details["profile"]
 
-    @commands.command(name="profile",
-                      aliases=profile_details["aliases"],
-                      usage=profile_details["usage"],
-                      description=profile_details["description"],
-                      signature=profile_details["signature"])
+    @commands.command(
+        name="profile",
+        aliases=profile_details["aliases"],
+        usage=profile_details["usage"],
+        description=profile_details["description"],
+        signature=profile_details["signature"])
     @commands.has_any_role(*profile_details["required_roles"])
     @commands.cooldown(profile_details["cooldown_rate"], profile_details["cooldown_per"])
     async def profile(self, ctx, member: discord.Member = None):
@@ -97,9 +102,11 @@ class Coins(commands.Cog):
         user_collection = self.client.get_database_collection("users")
         user_profile = user_collection.find_one({"_id": member.id})
 
-        profile_embed = self.client.create_embed("Member Profile",
-                                                 f"{member.name} ({member.mention})'s OUT Account Details",
-                                                 config.embed_info_color)
+        profile_embed = self.client.create_embed(
+            "Member Profile",
+            f"{member.name} ({member.mention})'s OUT Account Details",
+            config.embed_info_color
+        )
 
         for role in member.roles[::-1]:
             if role.hoist:
@@ -128,7 +135,12 @@ class Coins(commands.Cog):
             badges = "You Do Not Have Any Badges..."
 
         profile_embed.add_field(name="Server Role", value=member_role.mention, inline=True)
-        profile_embed.add_field(name="OUT Coins", value=f"{user_profile['outcoins']} <:outcoin:{config.emoji_ids['coin']}>", inline=True)
+
+        profile_embed.add_field(
+            name="OUT Coins", value=f"{user_profile['outcoins']} <:outcoin:{config.emoji_ids['coin']}>",
+            inline=True
+        )
+
         profile_embed.add_field(name="Supporting", value=supporting, inline=True)
         profile_embed.add_field(name="Badges", value=badges, inline=False)
 
@@ -136,16 +148,21 @@ class Coins(commands.Cog):
 
     shop_details = command_details["shop"]
 
-    @commands.command(name="shop",
-                      aliases=shop_details["aliases"],
-                      usage=shop_details["usage"],
-                      description=shop_details["description"],
-                      signature=shop_details["signature"])
+    @commands.command(
+        name="shop",
+        aliases=shop_details["aliases"],
+        usage=shop_details["usage"],
+        description=shop_details["description"],
+        signature=shop_details["signature"])
     @commands.has_any_role(*shop_details["required_roles"])
     @commands.cooldown(shop_details["cooldown_rate"], shop_details["cooldown_per"])
     async def shop(self, ctx, category=None):
         if category is None:
-            category_embed = self.client.create_embed("OUT Shop Categories", "A list of every shop category that you can buy from!", config.embed_info_color)
+            category_embed = self.client.create_embed(
+                "OUT Shop Categories",
+                "A list of every shop category that you can buy from!",
+                config.embed_info_color
+            )
 
             for shop_category in config.shop_categories:
                 formal_category = config.formal_shop_categories[shop_category]
@@ -156,7 +173,12 @@ class Coins(commands.Cog):
 
         category = category.lower()
         if category not in config.shop_categories:
-            category_embed = self.client.create_embed("Invalid Shop Category", "There is no shop category by that name.", config.embed_error_color)
+            category_embed = self.client.create_embed(
+                "Invalid Shop Category",
+                "There is no shop category by that name.",
+                config.embed_error_color
+            )
+
             return await ctx.reply(embed=category_embed)
 
         await self.client.database_user_preload(ctx.author.id)
@@ -191,7 +213,12 @@ class Coins(commands.Cog):
                 item_preview = f"<:outemoji:{config.emoji_ids['out']}>"
 
             item_embed = self.client.create_embed("OUT Shop", shop_item["description"], config.embed_info_color)
-            item_embed.add_field(name=shop_item["name"], value=f"Price: {shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>\n{item_preview}", inline=True)
+
+            item_embed.add_field(
+                name=shop_item["name"],
+                value=f"Price: {shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>\n{item_preview}",
+                inline=True
+            )
 
             if shop_item["type"] == "rank_badge_transaction":
                 rank_tier = 1
@@ -212,9 +239,11 @@ class Coins(commands.Cog):
                 return
 
             async def invalid_response():
-                invalid_response_embed = self.client.create_embed("Invalid Response",
-                                                                  "The response that you provided to the question was not acceptable.",
-                                                                  config.embed_error_color)
+                invalid_response_embed = self.client.create_embed(
+                    "Invalid Response",
+                    "The response that you provided to the question was not acceptable.",
+                    config.embed_error_color
+                )
 
                 await shop_message.edit(embed=invalid_response_embed)
 
@@ -234,20 +263,33 @@ class Coins(commands.Cog):
                     item_index = index_bounds[0]
             else:  # Purchasing Item
                 if user_profile["outcoins"] < shop_item["price"]:
-                    price_embed = self.client.create_embed("Invalid Item Purchase", "You are unable to purchase this item as your lack sufficient funds.", config.embed_error_color)
+                    price_embed = self.client.create_embed(
+                        "Invalid Item Purchase",
+                        "You are unable to purchase this item as your lack sufficient funds.",
+                        config.embed_error_color
+                    )
+
                     return await shop_message.edit(embed=price_embed)
 
                 user_collection.update_one({"_id": ctx.author.id}, {"$inc": {"outcoins": -1 * shop_item["price"]}})
 
                 if user_profile["supporting"] is not None:
-                    user_collection.update_one({"_id": user_profile["supporting"]}, {"$inc": {"outcoins": shop_item["price"] * config.support_rate}})
+                    user_collection.update_one(
+                        {"_id": user_profile["supporting"]},
+                        {"$inc": {"outcoins": shop_item["price"] * config.support_rate}}
+                    )
 
                 if item_type == "role":
                     role_id = shop_item["role_id"]
 
                     for role in ctx.author.roles:
                         if role.id == role_id:
-                            role_embed = self.client.create_embed("Invalid Item Purchase", "You are unable to purchase this item as you already own it.", config.embed_error_color)
+                            role_embed = self.client.create_embed(
+                                "Invalid Item Purchase",
+                                "You are unable to purchase this item as you already own it.",
+                                config.embed_error_color
+                            )
+
                             return await shop_message.edit(embed=role_embed)
 
                     item_purchased = ctx.guild.get_role(role_id)
@@ -256,7 +298,12 @@ class Coins(commands.Cog):
                     badge_id = shop_item["badge_id"]
 
                     if badge_id in user_profile["badges"]:
-                        bade_embed = self.client.create_embed("Invalid Item Purchase", "You are unable to purchase this item as you already own it.", config.embed_error_color)
+                        bade_embed = self.client.create_embed(
+                            "Invalid Item Purchase",
+                            "You are unable to purchase this item as you already own it.",
+                            config.embed_error_color
+                        )
+
                         return await shop_message.edit(embed=bade_embed)
 
                     user_collection.update_one({"_id": ctx.author.id}, {"$push": {"badges": badge_id}})
@@ -264,7 +311,12 @@ class Coins(commands.Cog):
                     badge_id = f"{shop_item['badge_identifier']}_{rank_tier}"
 
                     if badge_id in user_profile["badges"]:
-                        bade_embed = self.client.create_embed("Invalid Item Purchase", "You are unable to purchase this item as you already own it.", config.embed_error_color)
+                        bade_embed = self.client.create_embed(
+                            "Invalid Item Purchase",
+                            "You are unable to purchase this item as you already own it.",
+                            config.embed_error_color
+                        )
+
                         return await shop_message.edit(embed=bade_embed)
 
                     if rank_tier > 1:
@@ -282,9 +334,24 @@ class Coins(commands.Cog):
                     else:
                         suffix = "th"
 
-                    transaction_embed = self.client.create_embed("Transaction Made", shop_item["transaction"].format(member=ctx.author, tier=rank_tier, suffix=suffix), config.embed_info_color)
-                    transaction_embed.add_field(name="OUT Coins Spent", value=f"{shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>", inline=True)
-                    transaction_embed.add_field(name="Staff Member Responsible", value=f"<@!{shop_item['staff_id']}>", inline=True)
+                    transaction_embed = self.client.create_embed(
+                        "Transaction Made",
+                        shop_item["transaction"].format(member=ctx.author, tier=rank_tier, suffix=suffix),
+                        config.embed_info_color
+                    )
+
+                    transaction_embed.add_field(
+                        name="OUT Coins Spent",
+                        value=f"{shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>",
+                        inline=True
+                    )
+
+                    transaction_embed.add_field(
+                        name="Staff Member Responsible",
+                        value=f"<@!{shop_item['staff_id']}>",
+                        inline=True
+                    )
+
                     transaction_embed.set_footer(text="Delete This Once Completed!")
 
                     transaction_channel = self.client.get_channel(config.channel_ids["transaction_logs"])
@@ -293,9 +360,24 @@ class Coins(commands.Cog):
                     notification_message = await transaction_channel.send(f"<@!{shop_item['staff_id']}>")
                     await notification_message.delete()
                 elif item_type == "transaction":
-                    transaction_embed = self.client.create_embed("Transaction Made", shop_item["transaction"].format(member=ctx.author), config.embed_info_color)
-                    transaction_embed.add_field(name="OUT Coins Spent", value=f"{shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>", inline=True)
-                    transaction_embed.add_field(name="Staff Member Responsible", value=f"<@!{shop_item['staff_id']}>", inline=True)
+                    transaction_embed = self.client.create_embed(
+                        "Transaction Made",
+                        shop_item["transaction"].format(member=ctx.author),
+                        config.embed_info_color
+                    )
+
+                    transaction_embed.add_field(
+                        name="OUT Coins Spent",
+                        value=f"{shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>",
+                        inline=True
+                    )
+
+                    transaction_embed.add_field(
+                        name="Staff Member Responsible",
+                        value=f"<@!{shop_item['staff_id']}>",
+                        inline=True
+                    )
+
                     transaction_embed.set_footer(text="Delete This Once Completed!")
 
                     transaction_channel = self.client.get_channel(config.channel_ids["transaction_logs"])
@@ -304,9 +386,19 @@ class Coins(commands.Cog):
                     notification_message = await transaction_channel.send(f"<@!{shop_item['staff_id']}>")
                     await notification_message.delete()
                     
-                purchased_embed = self.client.create_embed("Item Purchased", "Your item has been successfully purchased, please allow us time to process your transaction.", config.embed_success_color)
+                purchased_embed = self.client.create_embed(
+                    "Item Purchased",
+                    "Your item has been successfully purchased, please allow us time to process your transaction.",
+                    config.embed_success_color
+                )
+
                 purchased_embed.add_field(name="Item Purchased", value=shop_item["name"], inline=True)
-                purchased_embed.add_field(name="OUT Coins Spent", value=f"{shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>", inline=True)
+
+                purchased_embed.add_field(
+                    name="OUT Coins Spent",
+                    value=f"{shop_item['price']} <:outcoin:{config.emoji_ids['coin']}>",
+                    inline=True
+                )
 
                 if user_profile["supporting"] is not None:
                     purchased_embed.set_footer(text=f"Supported: <@!{user_profile['supporting']}>")
@@ -315,11 +407,12 @@ class Coins(commands.Cog):
 
     support_details = command_details["support"]
 
-    @commands.command(name="support",
-                      aliases=support_details["aliases"],
-                      usage=support_details["usage"],
-                      description=support_details["description"],
-                      signature=support_details["signature"])
+    @commands.command(
+        name="support",
+        aliases=support_details["aliases"],
+        usage=support_details["usage"],
+        description=support_details["description"],
+        signature=support_details["signature"])
     @commands.has_any_role(*support_details["required_roles"])
     @commands.cooldown(support_details["cooldown_rate"], support_details["cooldown_per"])
     async def support(self, ctx, member: discord.Member):
@@ -332,16 +425,22 @@ class Coins(commands.Cog):
             return await ctx.reply(embed=greedy_embed)
 
         user_collection.update_one({"_id": ctx.author.id}, {"$set": {"supporting": member.id}})
-        supporting_embed = self.client.create_embed("Now Supporting", f"You are now supporting {member.mention}.", config.embed_success_color)
+
+        supporting_embed = self.client.create_embed(
+            "Now Supporting",
+            f"You are now supporting {member.mention}.",
+            config.embed_success_color
+        )
         return await ctx.reply(embed=supporting_embed)
 
     emote_details = command_details["emote"]
 
-    @commands.command(name="emote",
-                      aliases=emote_details["aliases"],
-                      usage=emote_details["usage"],
-                      description=emote_details["description"],
-                      signature=emote_details["signature"])
+    @commands.command(
+        name="emote",
+        aliases=emote_details["aliases"],
+        usage=emote_details["usage"],
+        description=emote_details["description"],
+        signature=emote_details["signature"])
     @commands.has_any_role(*emote_details["required_roles"])
     @commands.cooldown(emote_details["cooldown_rate"], emote_details["cooldown_per"])
     async def emote(self, ctx):
@@ -351,7 +450,12 @@ class Coins(commands.Cog):
         uuid = user_profile["uuid"]
 
         if uuid is None:
-            verification_embed = self.client.create_embed("You have not verified!", "I am unable to create an emote until you have verified.", config.embed_error_color)
+            verification_embed = self.client.create_embed(
+                "You have not verified!",
+                "I am unable to create an emote until you have verified.",
+                config.embed_error_color
+            )
+
             return await ctx.reply(embed=verification_embed)
 
         mojangPlayerObject = get(f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid.replace('-', '')}").json()
@@ -364,8 +468,12 @@ class Coins(commands.Cog):
         foreground = foreground.crop(box=(40, 8, 48, 16))
         background.paste(foreground, (0, 0), foreground)
         backgroundData = list(background.getdata())
-        smallPixels = [backgroundData[:8], backgroundData[8:16], backgroundData[16:24], backgroundData[24:32],
-                       backgroundData[32:40], backgroundData[40:48], backgroundData[48:56], backgroundData[56:]]
+
+        smallPixels = [
+            backgroundData[:8], backgroundData[8:16], backgroundData[16:24], backgroundData[24:32],
+            backgroundData[32:40], backgroundData[40:48], backgroundData[48:56], backgroundData[56:]
+        ]
+
         pixels = []
 
         for smallRow in smallPixels:
@@ -390,25 +498,34 @@ class Coins(commands.Cog):
             largeImage.seek(0)
 
             if user_profile["emote"] is None:
-                emote = await ctx.guild.create_custom_emoji(name=mojangPlayerObject["name"].lower(), image=image_binary.getvalue())
+                emote = await ctx.guild.create_custom_emoji(
+                    name=mojangPlayerObject["name"].lower(),
+                    image=image_binary.getvalue()
+                )
+
                 user_collection.update_one({"_id": ctx.author.id}, {"$set": {"emote": emote.id}})
             else:
                 emote_id = user_profile["emote"]
                 emote = await ctx.guild.fetch_emoji(emote_id)
                 await emote.delete()
 
-                emote = await ctx.guild.create_custom_emoji(name=mojangPlayerObject["name"].lower(), image=image_binary.getvalue())
+                emote = await ctx.guild.create_custom_emoji(
+                    name=mojangPlayerObject["name"].lower(),
+                    image=image_binary.getvalue()
+                )
+
                 user_collection.update_one({"_id": ctx.author.id}, {"$set": {"emote": emote.id}})
 
         await ctx.message.add_reaction(emote)
 
     giftcoins_details = command_details["giftcoins"]
 
-    @commands.command(name="giftcoins",
-                      aliases=giftcoins_details["aliases"],
-                      usage=giftcoins_details["usage"],
-                      description=giftcoins_details["description"],
-                      signature=giftcoins_details["signature"])
+    @commands.command(
+        name="giftcoins",
+        aliases=giftcoins_details["aliases"],
+        usage=giftcoins_details["usage"],
+        description=giftcoins_details["description"],
+        signature=giftcoins_details["signature"])
     @commands.has_any_role(*giftcoins_details["required_roles"])
     @commands.cooldown(giftcoins_details["cooldown_rate"], giftcoins_details["cooldown_per"])
     async def giftcoins(self, ctx, member: discord.Member, amount: int):
@@ -418,7 +535,12 @@ class Coins(commands.Cog):
         user_profile = user_collection.find_one({"_id": ctx.author.id})
 
         if user_profile["outcoins"] < amount:
-            coins_embed = self.client.create_embed("Invalid Gift", "You are unable to gift these OUT Coins due to insufficient funds.", config.embed_error_color)
+            coins_embed = self.client.create_embed(
+                "Invalid Gift",
+                "You are unable to gift these OUT Coins due to insufficient funds.",
+                config.embed_error_color
+            )
+
             return await ctx.reply(embed=coins_embed)
 
         if member.id == ctx.author.id or amount < 1:
@@ -428,7 +550,12 @@ class Coins(commands.Cog):
         user_collection.update_one({"_id": ctx.author.id}, {"$inc": {"outcoins": -1 * amount}})
         user_collection.update_one({"_id": member.id}, {"$inc": {"outcoins": amount}})
 
-        gift_embed = self.client.create_embed("OUT Coins Gifted", "Your gift has been successfully transferred.", config.embed_success_color)
+        gift_embed = self.client.create_embed(
+            "OUT Coins Gifted",
+            "Your gift has been successfully transferred.",
+            config.embed_success_color
+        )
+
         gift_embed.add_field(name="From", value=ctx.author.mention, inline=True)
         gift_embed.add_field(name="To", value=member.mention, inline=True)
         gift_embed.add_field(name="OUT Coins Gifted", value=f"{amount} <:outcoin:{config.emoji_ids['coin']}>", inline=True)
@@ -437,11 +564,12 @@ class Coins(commands.Cog):
 
     outcoins = command_details["outcoins"]
 
-    @commands.command(name="outcoins",
-                      aliases=outcoins["aliases"],
-                      usage=outcoins["usage"],
-                      description=outcoins["description"],
-                      signature=outcoins["signature"])
+    @commands.command(
+        name="outcoins",
+        aliases=outcoins["aliases"],
+        usage=outcoins["usage"],
+        description=outcoins["description"],
+        signature=outcoins["signature"])
     @commands.has_any_role(*outcoins["required_roles"])
     @commands.cooldown(outcoins["cooldown_rate"], outcoins["cooldown_per"])
     async def outcoins(self, ctx, argument, amount: int, *args: discord.Member):
@@ -455,10 +583,21 @@ class Coins(commands.Cog):
                 await self.client.database_user_preload(member.id)
 
             user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {"outcoins": amount}})
-            coins_embed = self.client.create_embed("OUT Coins Added", "The respective member(s) have received their OUT Coins.", config.embed_success_color)
+
+            coins_embed = self.client.create_embed(
+                "OUT Coins Added",
+                "The respective member(s) have received their OUT Coins.",
+                config.embed_success_color
+            )
+
             await ctx.reply(embed=coins_embed)
 
-            log_embed = self.client.create_embed("OUT Coins Added", "OUT Coins have been distributed by a moderator.", config.embed_info_color)
+            log_embed = self.client.create_embed(
+                "OUT Coins Added",
+                "OUT Coins have been distributed by a moderator.",
+                config.embed_info_color
+            )
+
             log_embed.add_field(name="Member(s)", value=", ".join(member_identifications), inline=True)
             log_embed.add_field(name="Moderator", value=f"{ctx.author.name} ({ctx.author.mention})")
             log_embed.add_field(name="Amount", value=f"{amount} <:outcoin:{config.emoji_ids['coin']}>", inline=False)
@@ -470,10 +609,21 @@ class Coins(commands.Cog):
                 await self.client.database_user_preload(member.id)
 
             user_collection.update_many({"_id": {"$in": member_ids}}, {"$inc": {"outcoins": -1 * amount}})
-            coins_embed = self.client.create_embed("OUT Coins Removed", "The respective member(s) have been removed of their OUT Coins.", config.embed_success_color)
+
+            coins_embed = self.client.create_embed(
+                "OUT Coins Removed",
+                "The respective member(s) have been removed of their OUT Coins.",
+                config.embed_success_color
+            )
+
             await ctx.reply(embed=coins_embed)
 
-            log_embed = self.client.create_embed("OUT Coins Removed", "OUT Coins have been taken by a moderator.", config.embed_info_color)
+            log_embed = self.client.create_embed(
+                "OUT Coins Removed",
+                "OUT Coins have been taken by a moderator.",
+                config.embed_info_color
+            )
+
             log_embed.add_field(name="Member(s)", value=", ".join(member_identifications), inline=True)
             log_embed.add_field(name="Moderator", value=f"{ctx.author.name} ({ctx.author.mention})")
             log_embed.add_field(name="Amount", value=f"{amount} <:outcoin:{config.emoji_ids['coin']}>", inline=False)
@@ -481,16 +631,22 @@ class Coins(commands.Cog):
             log_channel = self.client.get_channel(config.channel_ids["miscellaneous_logs"])
             return await log_channel.send(embed=log_embed)
         else:
-            argument_embed = self.client.create_embed("Invalid Argument", "The argument that you provided was not acceptable.", config.embed_error_color)
+            argument_embed = self.client.create_embed(
+                "Invalid Argument",
+                "The argument that you provided was not acceptable.",
+                config.embed_error_color
+            )
+
             return await ctx.reply(embed=argument_embed)
 
     outcoins_top = command_details["outcoins_top"]
 
-    @commands.command(name="outcoinstop",
-                      aliases=outcoins_top["aliases"],
-                      usage=outcoins_top["usage"],
-                      description=outcoins_top["description"],
-                      signature=outcoins_top["signature"])
+    @commands.command(
+        name="outcoinstop",
+        aliases=outcoins_top["aliases"],
+        usage=outcoins_top["usage"],
+        description=outcoins_top["description"],
+        signature=outcoins_top["signature"])
     @commands.has_any_role(*outcoins_top["required_roles"])
     @commands.cooldown(outcoins_top["cooldown_rate"], outcoins_top["cooldown_per"])
     async def outcoins_top(self, ctx, places: int=10):
@@ -506,14 +662,23 @@ class Coins(commands.Cog):
             leaderboard.append(LeaderBoardPosition(user["_id"], user["outcoins"]))
 
         top = sorted(leaderboard, key=lambda x: x.coins, reverse=True)
-        leaderboard_embed = self.client.create_embed("OUT Coin Leaderboard", f"The top {places} wealthiest people in all of OUT!", config.embed_info_color)
+
+        leaderboard_embed = self.client.create_embed(
+            "OUT Coin Leaderboard",
+            f"The top {places} wealthiest people in all of OUT!",
+            config.embed_info_color
+        )
 
         for i in range(1, places + 1, 1):
             try:
                 value_one = top[i - 1].id
                 value_two = top[i - 1].coins
 
-                leaderboard_embed.add_field(name=f"{i}. <:outcoin:{config.emoji_ids['coin']}> {value_two}", value=f"<@!{value_one}>", inline=False)
+                leaderboard_embed.add_field(
+                    name=f"{i}. <:outcoin:{config.emoji_ids['coin']}> {value_two}",
+                    value=f"<@!{value_one}>",
+                    inline=False
+                )
             except IndexError:
                 leaderboard_embed.add_field(name=f"**<< {i} >>**", value="N/A | NaN", inline=False)
 

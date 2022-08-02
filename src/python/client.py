@@ -48,9 +48,11 @@ class OUT_Bot(commands.Bot):
         database_count = self.get_database_collection("users").find({"_id": user_id}).count()
 
         if database_count > 1:
-            emergency_embed = self.create_embed("Database Emergency",
-                                                "There are duplicate entries in the database that could lead to future data corruption.",
-                                                config.embed_error_color)
+            emergency_embed = self.create_embed(
+                "Database Emergency",
+                "There are duplicate entries in the database that could lead to future data corruption.",
+                config.embed_error_color
+            )
 
             emergency_embed.add_field(name="User ID", value=user_id)
 
@@ -155,6 +157,9 @@ class OUT_Bot_Member:
 class OUT_Bot_Embed(discord.Embed):
     def __init__(self, title, description, color):
         super().__init__(title=title, description=description, color=color)
-        self.set_author(name="OUT Bot",
-                        icon_url="https://cdn.discordapp.com/avatars/735989802822008893/dccdfc83ab30e8d86e39224fe84875b4.webp")
+        self.set_author(
+            name="OUT Bot",
+            icon_url="https://cdn.discordapp.com/avatars/735989802822008893/dccdfc83ab30e8d86e39224fe84875b4.webp"
+        )
+
         self.set_thumbnail(url="https://cdn.discordapp.com/banners/503560012581568514/e42b1c7a86fe10b995be98d718e81d16.jpg")

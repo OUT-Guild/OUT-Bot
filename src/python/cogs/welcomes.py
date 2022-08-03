@@ -42,7 +42,7 @@ class Welcomes(commands.Cog):
         mojang_data = get(mojang_url).json()
         uuid = mojang_data["id"]
 
-        if user_collection.find({"uuid": uuid}).count() == 0:
+        if user_collection.count_documents({"uuid": uuid}) == 0:
             hypixel_url = f"https://api.hypixel.net/player"
             hypixel_parameters = {"key": self.client.hypixel_key, "uuid": uuid}
             hypixel_data = get(hypixel_url, params=hypixel_parameters).json()
@@ -101,7 +101,7 @@ class Welcomes(commands.Cog):
         mojang_data = get(mojang_url).json()
         uuid = mojang_data["id"]
 
-        if user_collection.find({"uuid": uuid}).count() == 0:
+        if user_collection.count_documents({"uuid": uuid}) == 0:
             hypixel_url = f"https://api.hypixel.net/player"
             hypixel_parameters = {"key": self.client.hypixel_key, "uuid": uuid}
             hypixel_data = get(hypixel_url, params=hypixel_parameters).json()

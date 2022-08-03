@@ -117,7 +117,7 @@ class Moderation(commands.Cog):
         while True:
             warning_id = "".join([choice(ascii_uppercase) for _ in range(6)])
 
-            if warnings_collection.find({"_id": warning_id}).count() == 0:
+            if warnings_collection.count_documents({"_id": warning_id}) == 0:
                 warnings_collection.insert_one({
                     "_id": warning_id,
                     "member": member.id,
@@ -188,7 +188,7 @@ class Moderation(commands.Cog):
     async def pardon(self, ctx, user: discord.User, warning_id, *, reason="No Reason Given"):
         warnings_collection = self.client.get_database_collection("warnings")
 
-        if warnings_collection.find({"_id": warning_id, "member": user.id}).count() == 0:
+        if warnings_collection.count_documents({"_id": warning_id, "member": user.id}) == 0:
             error_embed = self.client.create_embed(
                 "Warning Not Found",
                 "No warning with that ID was found in my database.",
@@ -259,7 +259,7 @@ class Moderation(commands.Cog):
     async def warning(self, ctx, warning_id):
         warning_collection = self.client.get_database_collection("warnings")
 
-        if warning_collection.find({"_id": warning_id}).count() == 0:
+        if warning_collection.count_documents({"_id": warning_id}) == 0:
             error_embed = self.client.create_embed(
                 "Warning Not Found",
                 "No warning with that ID was found in my database.",
@@ -298,7 +298,7 @@ class Moderation(commands.Cog):
     async def warnings(self, ctx, member: discord.Member):
         warning_collection = self.client.get_database_collection("warnings")
 
-        if warning_collection.find({"member": member.id}).count() == 0:
+        if warning_collection.count_documents({"member": member.id}) == 0:
             error_embed = self.client.create_embed(
                 "No Warnings Found",
                 "This member has no warnings on their profile.",
@@ -308,6 +308,7 @@ class Moderation(commands.Cog):
             return await ctx.reply(embed=error_embed)
 
         warnings = warning_collection.find({"member": member.id})
+        warning_count = warning_collection.count_documents({"member": member.id})
         page_index = 0
 
         warnings_embed = self.client.create_embed(
@@ -373,12 +374,12 @@ class Moderation(commands.Cog):
             elif warning_reply == "➡":
                 page_index += 1
             elif warning_reply == "⏭":
-                page_index = warnings.count() - 1
+                page_index = warning_count - 1
 
             if page_index == -1:
-                page_index = warnings.count() - 1
+                page_index = warning_count - 1
 
-            if page_index == warnings.count():
+            if page_index == warning_count:
                 page_index = 0
 
 async def setup(client):

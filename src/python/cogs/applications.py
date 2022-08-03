@@ -155,7 +155,7 @@ class Applications(commands.Cog):
             while True:
                 application_id = "".join([choice(ascii_uppercase) for _ in range(6)])
 
-                if application_collection.find({"_id": application_id}).count() == 0:
+                if application_collection.count_documents({"_id": application_id}) == 0:
                     application_collection.insert_one({
                         "_id": application_id,
                         "member": ctx.author.id,
@@ -219,7 +219,7 @@ class Applications(commands.Cog):
     async def application(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
-        if application_collection.find({"_id": application_id}).count() == 0:
+        if application_collection.count_documents({"_id": application_id}) == 0:
             error_embed = self.client.create_embed(
                 "Application Not Found",
                 "No application with that ID was found in my database.",
@@ -304,9 +304,10 @@ class Applications(commands.Cog):
         application_collection = self.client.get_database_collection("applications")
         applications_query = [{}, {"status": "PENDING"}, {"status": "ACCEPTED"}, {"status": "REJECTED"}, {"status": "CANCELLED"}][["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"].index(applications_filter_reply)]
         applications = application_collection.find(applications_query)
+        application_count = application_collection.count_documents(applications_query)
         page_index = 0
 
-        if applications.count() == 0:
+        if application_count == 0:
             no_applications_embed = self.client.create_embed(
                 "No Applications",
                 "No applications were found matching your query.",
@@ -346,7 +347,7 @@ class Applications(commands.Cog):
                     inline=False
                 )
 
-            application_embed.set_footer(text=f"Page {page_index + 1}/{applications.count()}")
+            application_embed.set_footer(text=f"Page {page_index + 1}/{application_count}")
 
             await message.edit(embed=application_embed)
 
@@ -389,12 +390,12 @@ class Applications(commands.Cog):
             elif application_reply == "➡":
                 page_index += 1
             elif application_reply == "⏭":
-                page_index = applications.count() - 1
+                page_index = application_count - 1
 
             if page_index == -1:
-                page_index = applications.count() - 1
+                page_index = application_count - 1
 
-            if page_index == applications.count():
+            if page_index == application_count:
                 page_index = 0
 
     accept_details = command_details["accept"]
@@ -410,7 +411,7 @@ class Applications(commands.Cog):
     async def accept(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
-        if application_collection.find({"_id": application_id, "status": "PENDING"}).count() == 0:
+        if application_collection.count_documents({"_id": application_id, "status": "PENDING"}) == 0:
             error_embed = self.client.create_embed(
                 "Application Not Found",
                 "No application with that ID was found in my database.",
@@ -533,7 +534,7 @@ class Applications(commands.Cog):
     async def reject(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
-        if application_collection.find({"_id": application_id, "status": "PENDING"}).count() == 0:
+        if application_collection.count_documents({"_id": application_id, "status": "PENDING"}) == 0:
             error_embed = self.client.create_embed(
                 "Application Not Found",
                 "No application with that ID was found in my database.",
@@ -656,7 +657,7 @@ class Applications(commands.Cog):
     async def cancel(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
-        if application_collection.find({"_id": application_id, "status": "PENDING"}).count() == 0:
+        if application_collection.count_documents({"_id": application_id, "status": "PENDING"}) == 0:
             error_embed = self.client.create_embed(
                 "Application Not Found",
                 "No application with that ID was found in my database.",

@@ -45,7 +45,7 @@ class OUT_Bot(commands.Bot):
         return self.discord_database[collection]
 
     async def database_user_preload(self, user_id):
-        database_count = self.get_database_collection("users").find({"_id": user_id}).count()
+        database_count = self.get_database_collection("users").count_documents({"_id": user_id})
 
         if database_count > 1:
             emergency_embed = self.create_embed(

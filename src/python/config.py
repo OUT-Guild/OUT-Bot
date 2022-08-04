@@ -64,7 +64,7 @@ embed_info_color = 0xff8d00
 embed_error_color = 0xf44336
 
 # Moderation Configuration
-allowed_regex = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[{]}\|;:,<.>/?/*-+’‘“” " + "'" + '"'
+allowed_regex = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[{]}\|;:,<.>/?/*-+’‘“€£¿¡” " + "'" + '"'
 
 # Application Configuration
 application_questions = [

@@ -68,6 +68,7 @@ class Welcomes(commands.Cog):
             user_collection.update_one({"_id": ctx.author.id}, {"$set": {"uuid": uuid}})
             role = discord.utils.get(ctx.guild.roles, id=707624818090049627)
             await ctx.author.add_roles(role)
+            ctx.message.add_reaction(f"<:tickYes:{config.emoji_ids['yes']}>")
         else:
             user = user_collection.find_one({"uuid": uuid})
 
@@ -82,6 +83,7 @@ class Welcomes(commands.Cog):
 
             role = discord.utils.get(ctx.guild.roles, id=707624818090049627)
             await ctx.author.add_roles(role)
+            ctx.message.add_reaction(f"<:tickYes:{config.emoji_ids['yes']}>")
 
     admin_link_details = command_details["admin:link"]
 

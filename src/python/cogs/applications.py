@@ -187,7 +187,7 @@ class Applications(commands.Cog):
 
             application_embed.set_footer(text=f"Application ID: {application_id}")
 
-            applications_channel = self.client.get_channel(config.channel_ids["applications"])
+            applications_channel = self.client.get_channel(config.channel_ids["application-logs"])
             await applications_channel.send(embed=application_embed)
 
             success_embed = self.client.create_embed(

@@ -187,7 +187,7 @@ class Applications(commands.Cog):
 
             application_embed.set_footer(text=f"Application ID: {application_id}")
 
-            applications_channel = self.client.get_channel(config.channel_ids["application-logs"])
+            applications_channel = self.client.get_channel(config.channel_ids["applications"])
             await applications_channel.send(embed=application_embed)
 
             success_embed = self.client.create_embed(
@@ -607,7 +607,7 @@ class Applications(commands.Cog):
             if not notification_sent:
                 log_embed.set_footer(text="The user did not receive a notification because their DMs are disabled.")
 
-            log_channel = self.client.get_channel(config.channel_ids["applications"])
+            log_channel = self.client.get_channel(config.channel_ids["application-logs"])
             await log_channel.send(embed=log_embed)
 
             success_embed = self.client.create_embed(

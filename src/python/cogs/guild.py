@@ -122,7 +122,7 @@ class Guild(commands.Cog):
             config.embed_success_color
         )
 
-        return await ctx.reply(inactive_embed)
+        return await ctx.reply(embed=inactive_embed)
 
     admin_inactive_details = command_details["admin:inactive"]
 

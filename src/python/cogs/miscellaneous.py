@@ -49,13 +49,16 @@ class Miscellaneous(commands.Cog):
 
             await ctx.reply(embed=error_embed)
 
-            line = format_exception(type(error), error, error.__traceback__)[2].lstrip()
+            formatted_exception = format_exception(type(error), error, error.__traceback__)
+            line = f"{formatted_exception[2].lstrip()}"
 
             log_embed = self.client.create_embed(
                 "Command Raised Error",
-                f"```{error}```\n```py\n{line}```\n",
+                f"An exception occured while trying to execute **!{ctx.command.name}**.",
                 config.embed_error_color
             )
+
+            log_embed.add_field(name="Error Traceback", value=f"```{error}```\n```py\n{line}```\n", inline=True)
 
             log_embed.set_footer(text=error.__class__.__name__)
 

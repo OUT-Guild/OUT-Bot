@@ -38,7 +38,7 @@ class Guild(commands.Cog):
                 hypixel_parameters = {"key": self.client.hypixel_key, "player": user_profile["uuid"]}
                 hypixel_data = get(hypixel_url, params=hypixel_parameters).json()
 
-                if hypixel_data["guild"] is not None or hypixel_data["guild"]["name"] != "OUT":
+                if hypixel_data["guild"] is None or hypixel_data["guild"]["name"] != "OUT":
                     await remove_role(member)
                     continue
 
@@ -70,7 +70,7 @@ class Guild(commands.Cog):
         hypixel_parameters = {"key": self.client.hypixel_key, "player": user_profile["uuid"]}
         hypixel_data = get(hypixel_url, params=hypixel_parameters).json()
 
-        if hypixel_data["guild"] is not None or hypixel_data["guild"]["name"] != "OUT":
+        if hypixel_data["guild"] is None or hypixel_data["guild"]["name"] != "OUT":
             validate_embed = self.client.create_embed(
                 "Unable to Validate",
                 "You are not a member of the Hypixel OUT Guild.",

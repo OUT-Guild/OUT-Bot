@@ -28,7 +28,7 @@ channel_ids = {
 }
 
 message_ids = {
-    "apply": 0
+    "apply": 995352030732374197
 }
 
 role_ids = {

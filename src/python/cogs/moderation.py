@@ -76,7 +76,7 @@ class Moderation(commands.Cog):
         signature=clear_details["signature"])
     @commands.has_any_role(*clear_details["required_roles"])
     @commands.cooldown(clear_details["cooldown_rate"], clear_details["cooldown_per"])
-    async def clear(self, ctx, number):
+    async def clear(self, ctx, number: int):
         await ctx.channel.purge(limit=number)
 
         log_embed = self.client.create_embed(

@@ -39,8 +39,17 @@ class Welcomes(commands.Cog):
         user_collection = self.client.get_database_collection("users")
 
         mojang_url = f"https://api.mojang.com/users/profiles/minecraft/{username}"
-        mojang_data = get(mojang_url).json()
-        uuid = mojang_data["id"]
+        try:
+            mojang_data = get(mojang_url).json()
+            uuid = mojang_data["id"]
+        except:
+            unknown_embed = self.client.create_embed(
+                "Unknown Account",
+                "That account does not exist.",
+                config.embed_error_color
+            )
+
+            return await ctx.reply(embed=unknown_embed)
 
         if user_collection.count_documents({"uuid": uuid}) == 0:
             hypixel_url = f"https://api.hypixel.net/player"

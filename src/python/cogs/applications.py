@@ -1,9 +1,8 @@
-from asyncio import tasks
 import discord_module as discord
 
 import discord
 from discord.errors import Forbidden
-from discord.ext import commands
+from discord.ext import commands, tasks
 from json import load
 from random import choice
 from string import ascii_uppercase

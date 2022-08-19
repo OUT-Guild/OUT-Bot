@@ -27,7 +27,9 @@ channel_ids = {
     "transaction_logs": 1000661999597916190
 }
 
-message_ids = {}
+message_ids = {
+    "apply": 995352030732374197
+}
 
 role_ids = {
     "muted": 714919830272081941,

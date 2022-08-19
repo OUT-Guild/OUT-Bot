@@ -1,3 +1,4 @@
+from asyncio import tasks
 import discord_module as discord
 
 import discord
@@ -15,6 +16,14 @@ class Applications(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+
+    @tasks.loop(minutes=5)
+    async def application_clearing(self):
+        appplications_channel = await self.client.fetch_channel(config.channel_ids['apply'])
+
+        async for message in await appplications_channel.history():
+            if message.id != config.message_ids["apply"]:
+                await message.delete()
 
     apply_details = command_details["apply"]
 

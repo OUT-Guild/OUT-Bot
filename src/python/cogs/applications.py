@@ -15,6 +15,7 @@ class Applications(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.application_clearing.start()
         self.accepted_role.start()
 
     @tasks.loop(minutes=5)

@@ -16,6 +16,7 @@ class Applications(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.application_clearing.start()
+        self.accepted_role.start()
 
     @tasks.loop(minutes=5)
     async def application_clearing(self):
@@ -24,6 +25,20 @@ class Applications(commands.Cog):
         async for message in await appplications_channel.history():
             if message.id != config.message_ids["apply"]:
                 await message.delete()
+
+    @tasks.loop(minutes=5)
+    async def accepted_role(self):
+        guild = await self.client.fetch_guild(503560012581568514)
+        waiting_role = guild.get_role(config.role_ids["waiting"])
+        application_collection = self.client.get_database_collection("applications")
+
+        async def remove_role(member):
+            await member.remove_roles(waiting_role, reason="Not Eligible for Waiting List")
+
+        for member in guild.members:
+            if waiting_role in member.roles:
+                if application_collection.count_documents({"member": member.id, "status": "ACCEPTED"}) == 0:
+                    await remove_role(member)
 
     apply_details = command_details["apply"]
 
@@ -273,7 +288,7 @@ class Applications(commands.Cog):
     async def applications(self, ctx):
         applications_filter_embed = self.client.create_embed(
             "Applications Filter",
-            "What filters would you like to apply to the applications database?\n:one: No Filter\n:two: Unread\n:three: Accepted\n:four: Rejected\n:five: Cancelled",
+            "What filters would you like to apply to the applications database?\n:one: No Filter\n:two: Unread\n:three: Accepted\n:four: Rejected\n:five: Cancelled\n:six: Joined",
             config.embed_info_color
         )
 
@@ -284,6 +299,7 @@ class Applications(commands.Cog):
         await message.add_reaction("3️⃣")
         await message.add_reaction("4️⃣")
         await message.add_reaction("5️⃣")
+        await message.add_reaction("6️⃣")
 
         applications_filter_reply = await self.client.message_reaction(message, ctx.author, 25)
 
@@ -299,7 +315,7 @@ class Applications(commands.Cog):
 
             await message.edit(embed=invalid_response_embed)
 
-        if applications_filter_reply not in ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]:
+        if applications_filter_reply not in ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣"]:
             return await invalid_response()
 
         await message.remove_reaction(applications_filter_reply, ctx.author)
@@ -309,9 +325,10 @@ class Applications(commands.Cog):
         await message.remove_reaction("3️⃣", self.client.user)
         await message.remove_reaction("4️⃣", self.client.user)
         await message.remove_reaction("5️⃣", self.client.user)
+        await message.remove_reaction("6️⃣", self.client.user)
 
         application_collection = self.client.get_database_collection("applications")
-        applications_query = [{}, {"status": "PENDING"}, {"status": "ACCEPTED"}, {"status": "REJECTED"}, {"status": "CANCELLED"}][["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"].index(applications_filter_reply)]
+        applications_query = [{}, {"status": "PENDING"}, {"status": "ACCEPTED"}, {"status": "REJECTED"}, {"status": "CANCELLED"}, {"status": "JOINED"}][["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣"].index(applications_filter_reply)]
         applications = application_collection.find(applications_query)
         application_count = application_collection.count_documents(applications_query)
         page_index = 0
@@ -460,6 +477,10 @@ class Applications(commands.Cog):
             return await invalid_response(application_add_note_message)
 
         async def accept_application(last_reply, note=None):
+            guild = await self.client.fetch_guild(503560012581568514)
+            waiting_role = guild.get_role(config.role_ids["waiting"])
+            await user.add_roles(waiting_role)
+
             application_collection.update_one({"_id": application_id}, {"$set": {"status": "ACCEPTED"}})
             application_accept_embed = self.client.create_embed(
                 "Application Accepted",
@@ -666,7 +687,7 @@ class Applications(commands.Cog):
     async def cancel(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
-        if application_collection.count_documents({"_id": application_id, "status": "PENDING"}) == 0:
+        if application_collection.count_documents({"_id": application_id, "status": {"$in": ["PENDING", "ACCEPTED"]}}) == 0:
             error_embed = self.client.create_embed(
                 "Application Not Found",
                 "No application with that ID was found in my database.",
@@ -703,6 +724,57 @@ class Applications(commands.Cog):
             return await last_reply.reply(embed=success_embed)
 
         await cancel_application(ctx.message)
+
+    joined_details = command_details["joined"]
+
+    @commands.command(
+        name="joined",
+        aliases=joined_details["aliases"],
+        usage=joined_details["usage"],
+        description=joined_details["description"],
+        signature=joined_details["signature"])
+    @commands.has_any_role(*joined_details["required_roles"])
+    @commands.cooldown(joined_details["cooldown_rate"], joined_details["cooldown_per"])
+    async def cancel(self, ctx, application_id):
+        application_collection = self.client.get_database_collection("applications")
+
+        if application_collection.count_documents({"_id": application_id, "status": "ACCEPTED"}) == 0:
+            error_embed = self.client.create_embed(
+                "Application Not Found",
+                "No application with that ID was found in my database.",
+                config.embed_error_color
+            )
+
+            return await ctx.reply(embed=error_embed)
+
+        user = await self.client.fetch_user(application_collection.find_one({"_id": application_id})["member"])
+
+        async def join_application(last_reply):
+            application_collection.update_one({"_id": application_id}, {"$set": {"status": "JOINED"}})
+            log_embed = self.client.create_embed(
+                "Application Joined",
+                "An application was joined by a moderator.",
+                config.embed_info_color
+            )
+
+            log_embed.add_field(name="Application ID", value=application_id, inline=True)
+            log_embed.add_field(name="Moderator", value=f"{ctx.author.name} ({ctx.author.mention})", inline=False)
+
+            log_channel = self.client.get_channel(config.channel_ids["application_logs"])
+            await log_channel.send(embed=log_embed)
+
+            success_embed = self.client.create_embed(
+                "Application Joined",
+                f"Your joining of application #{application_id} was successful.",
+                config.embed_success_color
+            )
+
+            success_embed.add_field(name="Application ID", value=application_id, inline=True)
+            success_embed.add_field(name="Applicant", value=f"{user.name} ({user.mention})", inline=False)
+
+            return await last_reply.reply(embed=success_embed)
+
+        await join_application(ctx.message)
 
 async def setup(client):
     await client.add_cog(Applications(client), guilds=[discord.Object(id=503560012581568514)])

@@ -170,6 +170,15 @@
     "usage": "!cancel (Application ID)",
     "description": "Cancels an application into the OUT Guild.",
     "signature": "StarbuckBarista"
+  }, "joined": {
+    "cog": "applications",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 60,
+    "cooldown_per": 2,
+    "aliases": [],
+    "usage": "!joined (Application ID)",
+    "description": "Cancels an application into the OUT Guild.",
+    "signature": "StarbuckBarista"
   }, "profile": {
     "cog": "coins",
     "required_roles": ["Guest"],

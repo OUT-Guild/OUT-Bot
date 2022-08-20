@@ -735,7 +735,7 @@ class Applications(commands.Cog):
         signature=joined_details["signature"])
     @commands.has_any_role(*joined_details["required_roles"])
     @commands.cooldown(joined_details["cooldown_rate"], joined_details["cooldown_per"])
-    async def cancel(self, ctx, application_id):
+    async def joined(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
         if application_collection.count_documents({"_id": application_id, "status": "ACCEPTED"}) == 0:

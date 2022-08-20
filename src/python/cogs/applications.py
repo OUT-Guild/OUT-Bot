@@ -24,6 +24,20 @@ class Applications(commands.Cog):
             if message.id != config.message_ids["apply"]:
                 await message.delete()
 
+    @tasks.loop(minutes=5)
+    async def accepted_role(self):
+        guild = await self.client.fetch_guild(503560012581568514)
+        waiting_role = guild.get_role(config.role_ids["waiting"])
+        application_collection = self.client.get_database_collection("applications")
+
+        async def remove_role(member):
+            await member.remove_roles(waiting_role, reason="Not Eligible for Waiting List")
+
+        for member in guild.members:
+            if waiting_role in member.roles:
+                if application_collection.count_documents({"member": member.id, "status": "ACCEPTED"}) == 0:
+                    await remove_role(member)
+
     apply_details = command_details["apply"]
 
     @commands.command(
@@ -461,6 +475,10 @@ class Applications(commands.Cog):
             return await invalid_response(application_add_note_message)
 
         async def accept_application(last_reply, note=None):
+            guild = await self.client.fetch_guild(503560012581568514)
+            waiting_role = guild.get_role(config.role_ids["waiting"])
+            await user.add_roles(waiting_role)
+
             application_collection.update_one({"_id": application_id}, {"$set": {"status": "ACCEPTED"}})
             application_accept_embed = self.client.create_embed(
                 "Application Accepted",

@@ -22,7 +22,7 @@ class Applications(commands.Cog):
     async def application_clearing(self):
         appplications_channel = await self.client.fetch_channel(config.channel_ids['apply'])
 
-        async for message in await appplications_channel.history():
+        async for message in appplications_channel.history():
             if message.id != config.message_ids["apply"]:
                 await message.delete()
 

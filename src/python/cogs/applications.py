@@ -685,7 +685,7 @@ class Applications(commands.Cog):
     async def cancel(self, ctx, application_id):
         application_collection = self.client.get_database_collection("applications")
 
-        if application_collection.count_documents({"_id": application_id, "status": "PENDING"}) == 0:
+        if application_collection.count_documents({"_id": application_id, "status": {"$in": ["PENDING", "ACCEPTED"]}}) == 0:
             error_embed = self.client.create_embed(
                 "Application Not Found",
                 "No application with that ID was found in my database.",

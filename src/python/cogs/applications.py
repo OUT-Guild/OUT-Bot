@@ -7,6 +7,7 @@ from json import load
 from random import choice
 from string import ascii_uppercase
 
+from client import OUT_Bot_Member
 import config
 
 class Applications(commands.Cog):
@@ -447,6 +448,18 @@ class Applications(commands.Cog):
             return await ctx.reply(embed=error_embed)
 
         user = await self.client.fetch_user(application_collection.find_one({"_id": application_id})["member"])
+        member = await self.client.fetch_member(user.id)
+
+        if isinstance(member, OUT_Bot_Member):
+            error_embed = self.client.create_embed(
+                "Old Applicant",
+                "The applicant for this application is no longer in the server.",
+                config.embed_error_color
+            )
+
+            error_embed.set_footer(text="No Action Was Taken")
+
+            return await ctx.reply(embed=error_embed)
 
         application_add_note_embed = self.client.create_embed(
             "Add Note to Application",
@@ -479,7 +492,7 @@ class Applications(commands.Cog):
         async def accept_application(last_reply, note=None):
             guild = await self.client.fetch_guild(503560012581568514)
             waiting_role = guild.get_role(config.role_ids["waiting"])
-            await user.add_roles(waiting_role)
+            await member.add_roles(waiting_role)
 
             application_collection.update_one({"_id": application_id}, {"$set": {"status": "ACCEPTED"}})
             application_accept_embed = self.client.create_embed(

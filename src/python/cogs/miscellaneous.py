@@ -273,7 +273,7 @@ class Miscellaneous(commands.Cog):
             while True:
                 collage_id = "".join([choice(ascii_uppercase) for _ in range(6)])
 
-                if collage_collection.find({"_id": collage_id}).count() == 0:
+                if collage_collection.count_documents({"_id": collage_id}) == 0:
                     collage_collection.insert_one({
                         "_id": collage_id,
                         "member": member.id,

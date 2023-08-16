@@ -186,6 +186,7 @@ class Miscellaneous(commands.Cog):
 
         while True:
             collage = collages[page_index]
+            submitter = await self.client.fetch_member(collage["submitter"])
 
             collage_embed = self.client.create_embed(
                 f"{member.display_name}'s Collage",
@@ -193,7 +194,7 @@ class Miscellaneous(commands.Cog):
                 config.embed_success_color
             )
 
-            collage_embed.add_field(name="Submitted By", value=self.client.fetch_member(collage["submitter"]).mention, inline=True)
+            collage_embed.add_field(name="Submitted By", value=submitter.mention, inline=True)
             collage_embed.add_field(name="Collage Image ID", value=collage["_id"], inline=True)
             collage_embed.set_image(url=collage["image"])
             collage_embed.set_footer(text=f"Image {page_index + 1}/{collage_count}")

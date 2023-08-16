@@ -164,8 +164,9 @@ class Miscellaneous(commands.Cog):
     async def viewcollage(self, ctx, member: discord.Member):
         collage_collection = self.client.get_database_collection("collages")
         collages = collage_collection.find({"member": member.id})
+        collage_count = collage_collection.count_documents({"member": member.id})
 
-        if collages.count() == 0:
+        if collage_count == 0:
             clean_collage_embed = self.client.create_embed(
                 "Clean Collage",
                 f"{member.mention} has no embarrassing images to showcase.",
@@ -192,10 +193,10 @@ class Miscellaneous(commands.Cog):
                 config.embed_success_color
             )
 
-            collage_embed.add_field(name="Submitted By", value=f"<@!{collage['submitter']}>", inline=True)
+            collage_embed.add_field(name="Submitted By", value=self.client.fetch_member(collage["submitter"]).mention, inline=True)
             collage_embed.add_field(name="Collage Image ID", value=collage["_id"], inline=True)
             collage_embed.set_image(url=collage["image"])
-            collage_embed.set_footer(text=f"Image {page_index + 1}/{collages.count()}")
+            collage_embed.set_footer(text=f"Image {page_index + 1}/{collage_count}")
 
             await message.edit(embed=collage_embed)
             await message.add_reaction("⏮")
@@ -237,12 +238,12 @@ class Miscellaneous(commands.Cog):
             elif collage_reply == "➡":
                 page_index += 1
             elif collage_reply == "⏭":
-                page_index = collages.count() - 1
+                page_index = collage_count - 1
 
             if page_index == -1:
-                page_index = collages.count() - 1
+                page_index = collage_count - 1
 
-            if page_index == collages.count():
+            if page_index == collage_count:
                 page_index = 0
 
     addcollage_details = command_details["addcollage"]

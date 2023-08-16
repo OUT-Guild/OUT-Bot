@@ -305,5 +305,32 @@
     "usage": "!birthday (@Member) (Member Name) (#Channel)",
     "description": "Celebrates a Discord Member's Birthday.",
     "signature": "StarbuckBarista"
+  }, "viewcollage": {
+    "cog": "miscellaneous",
+    "required_roles": ["Guest"],
+    "cooldown_rate": 150,
+    "cooldown_per": 3,
+    "aliases": ["view_collage"],
+    "usage": "!viewcollage (@Member)",
+    "description": "Shows the collage of a member's recorded images.",
+    "signature": "StarbuckBarista"
+  }, "addcollage": {
+    "cog": "miscellaneous",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 150,
+    "cooldown_per": 3,
+    "aliases": ["add_collage"],
+    "usage": "!addcollage (@Member) (Image Attached to Message)",
+    "description": "Adds an image to a member's collage.",
+    "signature": "StarbuckBarista"
+  }, "removecollage": {
+    "cog": "miscellaneous",
+    "required_roles": ["OUT Staff", "*"],
+    "cooldown_rate": 150,
+    "cooldown_per": 3,
+    "aliases": ["remove_collage"],
+    "usage": "!removecollage (@Member) (Collage Image ID)",
+    "description": "Removes an image from a member's collage.",
+    "signature": "StarbuckBarista"
   }
 }
